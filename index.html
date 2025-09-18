@@ -1,146 +1,207 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <title>Love Letter</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: black;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,Arial,sans-serif;background:#000;overflow:hidden;color:#fff}
+    /* trung tâm */
+    .wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;}
 
-    /* Ô nhập chữ */
-    #inputBox {
-      position: absolute;
-      top: 20px;
-      display: flex;
-      gap: 10px;
+    /* input box (ở trên cùng khi chưa có ?text=) */
+    #inputBox{
+      position:absolute;top:18px;left:50%;transform:translateX(-50%);
+      z-index:50;display:flex;gap:8px;align-items:center;
+      background:rgba(255,255,255,0.9);padding:8px;border-radius:10px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.5);
+    }
+    #msgInput{padding:8px 10px;border-radius:8px;border:1px solid #ccc;font-size:16px}
+    #createBtn{padding:8px 12px;border-radius:8px;border:0;background:hotpink;color:#fff;cursor:pointer;font-weight:600}
+
+    /* khung thư chính - responsive, lớn giữa màn hình */
+    #card{
+      position:relative;
+      width:min(640px, 76vw);
+      height:min(840px, 86vh);
+      border-radius:22px;
+      /* nếu ảnh có, sẽ hiện; nếu ko có, dùng gradient làm fallback */
+      background-color:#ffeef0;
+      background-image: url("Love Letter.png");
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      box-shadow: 0 0 80px rgba(255,20,80,0.45), inset 0 0 40px rgba(255,255,255,0.02);
       z-index: 20;
-    }
-    #msgInput {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    #createBtn {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 8px;
-      background: hotpink;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
     }
 
-    /* Khung thư (trái tim) */
-    #card {
-      position: relative;
-      width: 500px;
-      height: 650px;
-      margin: auto;
-      background: url('your-heart-image.png') no-repeat center/cover;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(255, 0, 100, 0.7);
-      z-index: 10;
+    /* glow outline (khi ảnh transparent) */
+    #card::after{
+      content:"";
+      position:absolute;inset:0;border-radius:22px;
+      box-shadow:0 0 120px rgba(200,0,60,0.35);
+      pointer-events:none;
     }
 
-    /* Chữ trong tim */
-    #displayText {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      font-size: 32px;
-      font-weight: 900;
-      color: black;
-      text-align: center;
-      opacity: 0;
-
-      /* viền trắng để chữ nổi bật hơn */
-      text-shadow: 
-        2px 2px 4px white,
-        -2px -2px 4px white,
-        2px -2px 4px white,
-        -2px 2px 4px white;
-
-      animation: explode 1s ease-out forwards;
-      animation-delay: 1s; /* xuất hiện sau 1 giây */
+    /* chữ hiển thị ở giữa khung thư */
+    #displayText{
+      position:relative;
+      z-index:30;
+      color:black;
+      font-size:36px;
+      font-weight:800;
+      text-align:center;
+      max-width:88%;
+      line-height:1.2;
+      white-space:pre-wrap;
+      /* viền / glow trắng để chữ nổi bật trên mọi nền */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 8px #fff,
+        0 2px 0 rgba(0,0,0,0.6);
+      opacity:0;
+      transform:scale(0.85);
+      pointer-events:none;
     }
 
-    @keyframes explode {
-      0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-      }
-      60% {
-        transform: translate(-50%, -50%) scale(1.3);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
+    /* class bật animation nổ bung */
+    .explode {
+      animation: explodeAnim 700ms cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    @keyframes explodeAnim{
+      0% { opacity:0; transform:translateY(6px) scale(0.3); filter:blur(6px); }
+      60% { opacity:1; transform:translateY(-6px) scale(1.15); filter:blur(0); }
+      100% { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
     }
 
-    /* Thông báo copy */
-    #copyMsg {
-      position: absolute;
-      top: 60px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 14px;
-      display: none;
-      z-index: 30;
+    /* thông báo copy */
+    #copyMsg{
+      position:absolute;top:70px;left:50%;transform:translateX(-50%);
+      background:rgba(0,0,0,0.75);color:#fff;padding:8px 14px;border-radius:10px;
+      z-index:60;font-weight:600;display:none;
+    }
+
+    /* mobile font giảm */
+    @media (max-width:420px){
+      #displayText{font-size:22px}
+      #card{width:92vw;height:86vh;border-radius:14px}
     }
   </style>
 </head>
 <body>
-  <div id="inputBox">
-    <input id="msgInput" type="text" placeholder="Nhập lời nhắn...">
-    <button id="createBtn">Tạo link</button>
-  </div>
+  <div class="wrap">
+    <!-- input (ẩn khi mở bằng link ?text=) -->
+    <div id="inputBox">
+      <input id="msgInput" placeholder="Nhập lời nhắn..." />
+      <button id="createBtn">Tạo link</button>
+    </div>
 
-  <div id="copyMsg">✅ Đã sao chép link!</div>
+    <div id="copyMsg">✅ Đã sao chép link!</div>
 
-  <div id="card">
-    <div id="displayText"></div>
+    <!-- khung thư -->
+    <div id="card">
+      <div id="displayText" aria-live="polite"></div>
+    </div>
   </div>
 
   <script>
-    // Lấy text từ URL
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("text")) {
-      const txt = decodeURIComponent(params.get("text"));
-      document.getElementById("displayText").textContent = txt;
-      document.getElementById("inputBox").style.display = "none";
+    // Elements
+    const inputBox = document.getElementById('inputBox');
+    const msgInput = document.getElementById('msgInput');
+    const createBtn = document.getElementById('createBtn');
+    const copyMsg = document.getElementById('copyMsg');
+    const displayText = document.getElementById('displayText');
+
+    // Hàm typewriter đơn giản
+    function typeWriter(targetEl, text, speed=40){
+      targetEl.textContent = '';
+      let i = 0;
+      const t = setInterval(()=>{
+        targetEl.textContent += text.charAt(i);
+        i++;
+        if(i >= text.length) clearInterval(t);
+      }, speed);
     }
 
-    // Nút tạo link
-    document.getElementById("createBtn").addEventListener("click", () => {
-      const msg = document.getElementById("msgInput").value.trim();
-      if (!msg) return;
+    // Hiện thông báo copy (fade)
+    function showCopyNotice(){
+      copyMsg.style.display = 'block';
+      copyMsg.style.opacity = '1';
+      setTimeout(()=>{
+        copyMsg.style.transition = 'opacity 300ms';
+        copyMsg.style.opacity = '0';
+        setTimeout(()=>{ copyMsg.style.display='none'; copyMsg.style.transition=''; }, 350);
+      }, 900);
+    }
 
-      const link = window.location.origin + window.location.pathname + "?text=" + encodeURIComponent(msg);
+    // Lấy text từ URL ?text=
+    const params = new URLSearchParams(window.location.search);
+    if(params.has('text')){
+      const txt = decodeURIComponent(params.get('text') || '');
+      // Ẩn inputbox
+      inputBox.style.display = 'none';
 
-      // Copy link vào clipboard
-      navigator.clipboard.writeText(link).then(() => {
-        const copyMsg = document.getElementById("copyMsg");
-        copyMsg.style.display = "block";
-        setTimeout(() => copyMsg.style.display = "none", 2000);
-      });
+      // đặt text nhưng tạm ẩn -> bật class explode để nổ bung
+      displayText.textContent = '';            // clear
+      displayText.style.opacity = 0;
+      // thêm class để chạy animation nổ
+      displayText.classList.add('explode');
 
-      // Hiển thị luôn nội dung trong tim
-      window.location.href = link;
+      // sau animation, chạy typewriter (đỡ chói mắt)
+      displayText.addEventListener('animationend', ()=>{
+        // ngay lập tức set opacity 1 & start typewriter
+        displayText.style.opacity = 1;
+        // optional: nếu bạn muốn chữ hiện luôn (không type), dùng displayText.textContent = txt;
+        typeWriter(displayText, txt, 45);
+      }, { once: true });
+
+      // set data in case user wants non-typewriter fallback
+      // nếu text quá ngắn, typeWriter vẫn ok
+    }
+
+    // Tạo link và copy rồi chuyển trang (chỉ redirect khi copy thành công)
+    createBtn.addEventListener('click', async (e)=>{
+      const msg = msgInput.value.trim();
+      if(!msg){
+        alert('Vui lòng nhập chữ trước khi tạo link.');
+        msgInput.focus();
+        return;
+      }
+      const link = window.location.origin + window.location.pathname + '?text=' + encodeURIComponent(msg);
+
+      // Thử copy bằng Clipboard API
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        try{
+          await navigator.clipboard.writeText(link);
+          showCopyNotice();
+          // cho người dùng thấy thông báo xíu rồi chuyển trang (nếu muốn chuyển ngay thì giảm timeout)
+          setTimeout(()=>{ window.location.href = link; }, 600);
+        } catch(err){
+          // nếu không copy được (ngăn bởi trình duyệt), fallback sang prompt
+          console.warn('Clipboard write failed:', err);
+          const fallback = prompt('Không thể copy tự động. Hãy copy thủ công link này:', link);
+          if(fallback !== null) { window.location.href = link; } // nếu user OK thì chuyển
+        }
+      } else {
+        // fallback cũ
+        const fallback = prompt('Trình duyệt không hỗ trợ copy tự động. Copy link sau:', link);
+        if(fallback !== null) { window.location.href = link; }
+      }
     });
+
+    // --- Gợi ý debug nếu vẫn "bị lỗi" ---
+    // Nếu bạn thấy khung màu đen (không có hình):
+    //  - Kiểm tra tên file ảnh: đổi `"Love Letter.png"` thành đúng đường dẫn (ví dụ: "/images/Love Letter.png" hoặc URL đầy đủ).
+    //  - Mở DevTools (F12) -> Console / Network để xem file ảnh có 404 hay lỗi CORS không.
+    // Nếu clipboard không copy:
+    //  - Phải chạy từ HTTPS (hoặc localhost) để Clipboard API hoạt động; nó bị chặn trên các origin không an toàn.
+    // Nếu animation không chạy:
+    //  - Kiểm tra xem URL có parameter ?text=... không (nếu không có thì inputBox sẽ hiện, chữ không xuất).
   </script>
 </body>
 </html>
