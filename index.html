@@ -25,27 +25,34 @@
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    /* Khung chứa lá thư + chữ */
+    /* bố cục chính */
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      z-index: 2;
+    }
+
+    /* lá thư */
     .centerBox {
       position: relative;
-      z-index: 2;
       display: flex;
       justify-content: center;
       align-items: center;
-      max-height: 85vh; /* luôn vừa khung */
+      max-height: 85vh;
     }
-
     .centerBox img {
-      height: 85vh;   /* ép theo chiều cao màn hình */
-      width: auto;    /* giữ tỉ lệ */
+      height: 85vh;
+      width: auto;
       border-radius: 12px;
       box-shadow: 0 0 40px rgba(255,150,200,0.8);
     }
 
-    /* chữ hiển thị trong bức thư */
+    /* chữ trong lá thư */
     #displayText {
       position: absolute;
-      top: 55%; /* chỉnh cho chữ nằm trong phần trắng */
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 70%;
@@ -53,16 +60,19 @@
       font-size: 28px;
       font-weight: bold;
       color: black;
-      z-index: 8;
+      opacity: 0; /* ban đầu ẩn */
+      transition: opacity 1s ease;
       white-space: pre-wrap;
-      word-wrap: break-word;
       text-shadow:
         0 0 6px #fff,
         0 0 12px #fff,
         1px 1px 2px rgba(0,0,0,0.8);
     }
+    #displayText.show {
+      opacity: 1;
+    }
 
-    /* Hiệu ứng hoa rơi */
+    /* hiệu ứng hoa rơi */
     .petal {
       position: fixed;
       top: -10px;
@@ -76,38 +86,7 @@
       to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
-    /* Nút bật nhạc */
-    #playBtn {
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      z-index: 3;
-    }
-    audio { display: none; }
-
-    /* Gợi ý click */
-    #hint {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 20px;
-      font-weight: bold;
-      color: black;
-      z-index: 3;
-      background: rgba(255,255,255,0.7);
-      padding: 5px 15px;
-      border-radius: 8px;
-    }
-
-    /* Tim to ban đầu */
+    /* tim to ban đầu */
     #bigHeart {
       position: fixed;
       top: 50%;
@@ -124,7 +103,7 @@
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
 
-    /* Mảnh tim/hoa bay khi nổ */
+    /* mảnh tim/hoa nổ */
     .fragment {
       position: fixed;
       font-size: 24px;
@@ -139,17 +118,14 @@
       }
     }
 
-    /* form nhập chữ */
+    /* khung nhập chữ bên trái */
     #inputBox {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
       z-index: 20;
       background: rgba(255,255,255,0.8);
       padding: 10px 15px;
       border-radius: 10px;
       display: flex;
+      flex-direction: column;
       gap: 10px;
     }
     #inputBox input {
@@ -164,6 +140,31 @@
       cursor: pointer;
       background: pink;
     }
+
+    /* nút nhạc + hint bên phải */
+    .rightPanel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 20;
+    }
+    #playBtn {
+      background: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #hint {
+      font-size: 18px;
+      font-weight: bold;
+      color: black;
+      background: rgba(255,255,255,0.7);
+      padding: 5px 15px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -173,20 +174,25 @@
 
   <div id="bigHeart">❤️</div>
 
-  <!-- Lá thư + chữ -->
-  <div class="centerBox">
-    <img src="Love Letter.png" alt="Love Letter">
-    <div id="displayText"></div>
-  </div>
+  <div class="wrapper">
+    <!-- trái -->
+    <div id="inputBox">
+      <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
+      <button id="makeLink">Tạo link</button>
+    </div>
 
-  <!-- Nhập chữ -->
-  <div id="inputBox">
-    <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
-    <button id="makeLink">Tạo link</button>
-  </div>
+    <!-- giữa -->
+    <div class="centerBox">
+      <img src="Love Letter.png" alt="Love Letter">
+      <div id="displayText"></div>
+    </div>
 
-  <button id="playBtn">Bật nhạc 🎵</button>
-  <div id="hint">Click chuột để nổ tim ❤️</div>
+    <!-- phải -->
+    <div class="rightPanel">
+      <button id="playBtn">Bật nhạc 🎵</button>
+      <div id="hint">Click chuột để nổ tim ❤️</div>
+    </div>
+  </div>
 
   <script>
     // Mưa hoa
@@ -203,8 +209,9 @@
     }
     setInterval(createPetal, 80);
 
-    // Tim nổ đầu
+    // Tim nổ đầu + hiện chữ
     const bigHeart = document.getElementById("bigHeart");
+    const displayText = document.getElementById("displayText");
     setTimeout(() => {
       explode(
         bigHeart.getBoundingClientRect().left + bigHeart.offsetWidth/2,
@@ -212,7 +219,8 @@
         120, 400
       );
       bigHeart.style.display = "none";
-    }, 1000);
+      displayText.classList.add("show");
+    }, 1500);
 
     function explode(x, y, count, radius=150) {
       for (let i = 0; i < count; i++) {
@@ -269,10 +277,9 @@
       btn.style.display = "none";
     });
 
-    // ---- Chức năng nhập chữ + tạo link ----
+    // Nhập chữ + tạo link
     const msgInput = document.getElementById("message");
     const makeLinkBtn = document.getElementById("makeLink");
-    const displayText = document.getElementById("displayText");
 
     makeLinkBtn.addEventListener("click", () => {
       const text = encodeURIComponent(msgInput.value.trim());
