@@ -57,6 +57,21 @@
     }
     #displayText.show { opacity: 1; }
 
+    #bigEmoji {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 80px;
+      z-index: 5;
+      user-select: none;
+      transition: opacity 0.5s ease;
+    }
+    #bigEmoji.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .controls-left {
       position: absolute;
       left: 8%;
@@ -144,6 +159,9 @@
   </style>
 </head>
 <body>
+  <!-- Emoji mở đầu -->
+  <div id="bigEmoji">❤️</div>
+
   <div class="letterBox">
     <img src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
@@ -168,7 +186,7 @@
   </audio>
 
   <script>
-    // Hoa rơi
+    // Emoji rơi
     function createPetal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
@@ -182,7 +200,7 @@
     }
     setInterval(createPetal, 80);
 
-    // Tim nổ
+    // Emoji nổ
     function explode(x, y, count, radius=150) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
@@ -207,13 +225,13 @@
     const copyBtn = document.getElementById("copyBtn");
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
+    const bigEmoji = document.getElementById("bigEmoji");
 
     // Tim nổ khi click
     document.addEventListener("click", (e) => {
       if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
-      const x = e.clientX, y = e.clientY;
-      explode(x, y, 40, 120);
+      explode(e.clientX, e.clientY, 40, 120);
     });
 
     // Nhạc
@@ -225,23 +243,26 @@
       btn.style.display = "none";
     });
 
-    // Nút bắt đầu
+    // Bắt đầu
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
+
+      // Emoji mở đầu nổ
+      const rect = bigEmoji.getBoundingClientRect();
+      explode(rect.left + rect.width/2, rect.top + rect.height/2, 120, 400);
+      bigEmoji.classList.add("hide");
+
+      // Hiện chữ
       displayText.textContent = text;
       displayText.classList.add("show");
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
-      resetBtn.style.display = "inline-block";
-
-      // Reset sau 10s
       setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
-    // Sao chép link
+    // Copy link
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + "?text=" + text;
@@ -251,17 +272,20 @@
     // Reset
     resetBtn.addEventListener("click", () => location.reload());
 
-    // Trang link đã sao chép
+    // Nếu mở link copy
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
-
-      // Nổ tim + hiện chữ cùng lúc
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
       displayText.textContent = txt;
-      displayText.classList.add("show");
 
-      // Ẩn toàn bộ input + reset
+      // Emoji mở đầu tự động nổ
+      setTimeout(() => {
+        const rect = bigEmoji.getBoundingClientRect();
+        explode(rect.left + rect.width/2, rect.top + rect.height/2, 120, 400);
+        bigEmoji.classList.add("hide");
+        displayText.classList.add("show");
+      }, 800);
+
       inputBox.style.display = "none";
     }
   </script>
