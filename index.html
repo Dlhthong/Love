@@ -155,6 +155,7 @@
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
+    <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
   <!-- controls bên phải -->
@@ -205,6 +206,7 @@
     const displayText = document.getElementById("displayText");
     const startBtn = document.getElementById("startBtn");
     const copyBtn = document.getElementById("copyBtn");
+    const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
     // Tim nổ khi click
@@ -212,21 +214,7 @@
       if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
       const x = e.clientX, y = e.clientY;
-      const directions = [[1,0],[0,1],[-1,0],[0,-1],[0.7,0.7],[-0.7,0.7],[0.7,-0.7],[-0.7,-0.7]];
-      directions.forEach(([dx,dy])=>{
-        const frag = document.createElement("div");
-        frag.classList.add("fragment");
-        frag.textContent = "❤️";
-        frag.style.left = x + "px";
-        frag.style.top = y + "px";
-        frag.style.color = "red";
-        frag.style.fontSize = "20px";
-        frag.style.setProperty("--dx", dx*80 + "px");
-        frag.style.setProperty("--dy", dy*80 + "px");
-        frag.style.setProperty("--dur", "0.5s");
-        document.body.appendChild(frag);
-        setTimeout(()=>frag.remove(),600);
-      });
+      explode(x, y, 40, 120);
     });
 
     // Nhạc
@@ -248,6 +236,10 @@
 
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
+      resetBtn.style.display = "inline-block";
+
+      // Reset sau 10s
+      setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
     // Sao chép link
@@ -257,6 +249,9 @@
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
+    // Reset
+    resetBtn.addEventListener("click", () => location.reload());
+
     // Trang link đã sao chép
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
@@ -265,7 +260,7 @@
       displayText.classList.add("show");
       explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
-      // Ẩn hoàn toàn input box
+      // Ẩn toàn bộ input + reset
       inputBox.style.display = "none";
     }
   </script>
