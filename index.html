@@ -12,7 +12,7 @@
       font-family: Arial, sans-serif;
     }
 
-    /* Nền 2 ảnh đối xứng */
+    /* nền đối xứng 2 bên */
     body::before, body::after {
       content: "";
       position: absolute;
@@ -25,179 +25,269 @@
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    /* Lá thư chính giữa */
-    .letter {
+    /* lá thư cố định giữa */
+    .letterBox {
       position: absolute;
-      left: 50%;
       top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      width: 500px;
-      height: 700px;
-      background: url("love-letter.png") no-repeat center/cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(255, 192, 203, 0.8);
       z-index: 2;
     }
-
-    .letter-text {
-      font-size: 40px;
+    .letterBox img {
+      height: 85vh;
+      width: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255,150,200,0.8);
+    }
+    #displayText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      text-align: center;
+      font-size: 32px;
       font-weight: bold;
       color: black;
-      text-shadow: 2px 2px 6px rgba(255,255,255,0.9), -2px -2px 6px rgba(255,192,203,0.8);
-      word-break: break-word;
-      padding: 20px;
+      white-space: pre-wrap;
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-shadow:
+        0 0 6px #fff,
+        0 0 12px #fff,
+        1px 1px 2px rgba(0,0,0,0.8);
     }
+    #displayText.show { opacity: 1; }
 
-    /* Controls trái và phải */
-    .controls-left {
+    /* input bên trái */
+    #inputBox {
       position: absolute;
+      left: 8%;
       top: 50%;
-      left: 12%;
       transform: translateY(-50%);
-      text-align: center;
+      background: rgba(255,255,255,0.8);
+      padding: 10px 15px;
+      border-radius: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
       z-index: 2;
     }
-    .controls-right {
-      position: absolute;
-      top: 50%;
-      right: 12%;
-      transform: translateY(-50%);
+    #inputBox input {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid gray;
       text-align: center;
-      z-index: 2;
+      font-size: 16px;
     }
-
-    input {
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      text-align: center;
-      width: 180px;
-    }
-
-    button {
-      margin-top: 6px;
-      padding: 8px 20px;
+    #inputBox button {
+      padding: 6px 10px;
       border: none;
-      border-radius: 8px;
-      background: pink;
+      border-radius: 5px;
       cursor: pointer;
+      background: pink;
       font-weight: bold;
     }
 
-    .btn-small {
+    /* bên phải (nút nhạc + hint) */
+    .rightBox {
+      position: absolute;
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+      z-index: 2;
+    }
+    #playBtn {
       background: white;
-      padding: 6px 14px;
-      font-size: 14px;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #hint {
+      font-size: 18px;
+      font-weight: bold;
+      color: black;
+      background: rgba(255,255,255,0.7);
+      padding: 5px 15px;
+      border-radius: 8px;
     }
 
-    /* Hoa rơi */
-    .falling {
-      position: absolute;
-      top: -50px;
-      color: pink;
-      font-size: 20px;
+    /* hoa rơi */
+    .petal {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
       animation: fall linear forwards;
+      user-select: none;
+      pointer-events: none;
       z-index: 1;
     }
     @keyframes fall {
-      to {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-      }
+      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
-    /* Tim nổ */
-    .heart {
-      position: absolute;
-      font-size: 24px;
+    /* tim nổ ban đầu */
+    #bigHeart {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      font-size: 120px;
       color: red;
-      animation: boom 1s forwards;
-      z-index: 3;
+      z-index: 15;
+      transform: translate(-50%, -50%) scale(0);
+      animation: popIn 1.5s ease-out forwards;
     }
-    @keyframes boom {
-      0% { transform: scale(0); opacity: 1; }
-      50% { transform: scale(2); opacity: 1; }
-      100% { transform: scale(0); opacity: 0; }
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      60% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    /* mảnh tim nổ */
+    .fragment {
+      position: fixed;
+      font-size: 24px;
+      pointer-events: none;
+      animation: fly var(--dur) forwards;
+      z-index: 12;
+    }
+    @keyframes fly {
+      to {
+        transform: translate(var(--dx), var(--dy)) scale(0.7) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="letter">
-    <div class="letter-text" id="letterText">chào anh Hob</div>
+  <!-- tim nổ ban đầu -->
+  <div id="bigHeart">❤️</div>
+
+  <!-- trái: input -->
+  <div id="inputBox">
+    <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
+    <button id="makeLink">Tạo link</button>
   </div>
 
-  <!-- Bên trái -->
-  <div class="controls-left">
-    <input type="text" id="inputText" placeholder="Nhập chữ bạn muốn..." maxlength="15">
-    <br>
-    <button onclick="createLink()">Tạo link</button>
+  <!-- giữa: bức thư -->
+  <div class="letterBox">
+    <img src="Love Letter.png" alt="Love Letter">
+    <div id="displayText"></div>
   </div>
 
-  <!-- Bên phải -->
-  <div class="controls-right">
-    <button class="btn-small" onclick="toggleMusic()">Bật nhạc 🎵</button>
-    <br>
-    <button class="btn-small" onclick="boomHeart()">Click chuột để nổ tim 💗</button>
+  <!-- phải: nhạc + hint -->
+  <div class="rightBox">
+    <button id="playBtn">Bật nhạc 🎵</button>
+    <div id="hint">Click chuột để nổ tim ❤️</div>
   </div>
 
-  <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
+  <!-- nhạc -->
+  <audio id="bgm" loop muted>
+    <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    // Lấy chữ từ URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const letterText = document.getElementById("letterText");
-    if (urlParams.has("text")) {
-      letterText.textContent = urlParams.get("text");
+    // mưa hoa
+    function createPetal() {
+      const petal = document.createElement("div");
+      petal.classList.add("petal");
+      petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
+      petal.style.left = Math.random() * 100 + "vw";
+      petal.style.color = Math.random() > 0.5 ? "pink" : "red";
+      petal.style.fontSize = (Math.random() * 20 + 10) + "px";
+      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 10000);
     }
+    setInterval(createPetal, 80);
 
-    // Tạo link
-    function createLink() {
-      const input = document.getElementById("inputText").value.trim();
-      if (!input) return alert("Vui lòng nhập chữ!");
-      const url = window.location.origin + window.location.pathname + "?text=" + encodeURIComponent(input);
-      navigator.clipboard.writeText(url).then(() => {
-        alert("Đã sao chép link!");
-      });
-    }
+    // tim nổ ban đầu
+    const bigHeart = document.getElementById("bigHeart");
+    setTimeout(() => {
+      explode(
+        bigHeart.getBoundingClientRect().left + bigHeart.offsetWidth/2,
+        bigHeart.getBoundingClientRect().top + bigHeart.offsetHeight/2,
+        120, 400
+      );
+      bigHeart.style.display = "none";
+      document.getElementById("displayText").classList.add("show");
+    }, 1500);
 
-    // Nhạc
-    function toggleMusic() {
-      const music = document.getElementById("bgMusic");
-      if (music.paused) {
-        music.play();
-      } else {
-        music.pause();
+    function explode(x, y, count, radius=150) {
+      for (let i = 0; i < count; i++) {
+        const frag = document.createElement("div");
+        frag.classList.add("fragment");
+        frag.textContent = Math.random() > 0.5 ? "❀" : "❤️";
+        frag.style.left = x + "px";
+        frag.style.top = y + "px";
+        frag.style.color = Math.random() > 0.5 ? "pink" : "red";
+        frag.style.fontSize = (Math.random() * 25 + 15) + "px";
+        const angle = Math.random() * Math.PI * 2;
+        const distance = radius + Math.random() * 80;
+        frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+        frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
+        frag.style.setProperty("--dur", "1.5s");
+        document.body.appendChild(frag);
+        setTimeout(() => frag.remove(), 2000);
       }
     }
 
-    // Tim nổ khi click nút
-    function boomHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "💖";
-      heart.style.left = (window.innerWidth/2 - 10) + "px";
-      heart.style.top = (window.innerHeight/2 - 10) + "px";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 1000);
-    }
+    // click -> tim nhỏ
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
+      document.getElementById("hint").style.display = "none";
+      const x = e.clientX, y = e.clientY;
+      const directions = [[1,0],[0,1],[-1,0],[0,-1],[0.7,0.7],[-0.7,0.7],[0.7,-0.7],[-0.7,-0.7]];
+      directions.forEach(([dx,dy])=>{
+        const frag = document.createElement("div");
+        frag.classList.add("fragment");
+        frag.textContent = "❤️";
+        frag.style.left = x + "px";
+        frag.style.top = y + "px";
+        frag.style.color = "red";
+        frag.style.fontSize = "20px";
+        frag.style.setProperty("--dx", dx*80 + "px");
+        frag.style.setProperty("--dy", dy*80 + "px");
+        frag.style.setProperty("--dur", "0.5s");
+        document.body.appendChild(frag);
+        setTimeout(()=>frag.remove(),600);
+      });
+    });
 
-    // Hoa rơi ngẫu nhiên
-    setInterval(() => {
-      const flower = document.createElement("div");
-      flower.className = "falling";
-      flower.innerHTML = "🌸";
-      flower.style.left = Math.random() * window.innerWidth + "px";
-      flower.style.fontSize = (Math.random() * 20 + 10) + "px";
-      flower.style.animationDuration = (Math.random() * 3 + 2) + "s";
-      document.body.appendChild(flower);
-      setTimeout(() => flower.remove(), 5000);
-    }, 500);
+    // bật nhạc
+    const btn = document.getElementById("playBtn");
+    const audio = document.getElementById("bgm");
+    btn.addEventListener("click", () => {
+      audio.muted = false;
+      audio.play();
+      btn.style.display = "none";
+    });
+
+    // tạo link
+    const msgInput = document.getElementById("message");
+    const makeLinkBtn = document.getElementById("makeLink");
+    const displayText = document.getElementById("displayText");
+    makeLinkBtn.addEventListener("click", () => {
+      const text = encodeURIComponent(msgInput.value.trim());
+      if (!text) return alert("Vui lòng nhập chữ!");
+      const url = window.location.origin + window.location.pathname + "?text=" + text;
+      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
+    });
+
+    // load chữ từ link
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("text")) {
+      const txt = decodeURIComponent(params.get("text"));
+      displayText.textContent = txt;
+      msgInput.value = txt;
+      document.getElementById("inputBox").style.display = "none";
+    }
   </script>
 </body>
 </html>
