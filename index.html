@@ -155,7 +155,6 @@
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
-    <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
   <!-- controls bên phải -->
@@ -206,7 +205,6 @@
     const displayText = document.getElementById("displayText");
     const startBtn = document.getElementById("startBtn");
     const copyBtn = document.getElementById("copyBtn");
-    const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
     // Tim nổ khi click
@@ -250,7 +248,6 @@
 
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
-      resetBtn.style.display = "inline-block";
     });
 
     // Sao chép link
@@ -258,11 +255,6 @@
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + "?text=" + text;
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
-    });
-
-    // Reset
-    resetBtn.addEventListener("click", () => {
-      window.location.href = window.location.pathname;
     });
 
     // Trang link đã sao chép
@@ -273,14 +265,8 @@
       displayText.classList.add("show");
       explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
-      // Ẩn input, hiện reset sau 10 giây
-      inputBox.innerHTML = ``;
-      setTimeout(() => {
-        inputBox.innerHTML = `<button id="resetBtn">Reset</button>`;
-        document.getElementById("resetBtn").addEventListener("click", () => {
-          window.location.href = window.location.pathname;
-        });
-      }, 10000);
+      // Ẩn hoàn toàn input box
+      inputBox.style.display = "none";
     }
   </script>
 </body>
