@@ -9,7 +9,7 @@
       height: 100vh;
       background: black;
       overflow: hidden;
-      font-family: Arial, sans-serif;
+      font-family: 'Times New Roman', serif;
     }
 
     body::before, body::after {
@@ -46,7 +46,6 @@
       width: 70%;
       text-align: center;
       font-size: 42px;
-      font-family: 'Times New Roman', serif;
       font-weight: bold;
       color: black;
       white-space: pre-wrap;
@@ -256,9 +255,11 @@
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
+
+      // Nổ tim + hiện chữ cùng lúc
+      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
       displayText.textContent = txt;
       displayText.classList.add("show");
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
       // Ẩn toàn bộ input + reset
       inputBox.style.display = "none";
