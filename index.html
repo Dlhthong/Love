@@ -1,268 +1,61 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Love Letter</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: black;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+<script>
+  const displayText = document.getElementById("displayText");
+  const startBtn = document.getElementById("startBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const inputBox = document.getElementById("inputBox");
 
-    body::before, body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
-      z-index: 0;
-    }
-    body::after { right: 0; transform: scaleX(-1); }
-    body::before { left: 0; }
+  // Tim nổ khi click
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
+    document.getElementById("hint").style.display = "none";
+    const x = e.clientX, y = e.clientY;
+    explode(x, y, 40, 120);
+  });
 
-    .letterBox {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-    }
-    .letterBox img {
-      height: 85vh;
-      width: auto;
-      border-radius: 12px;
-      box-shadow: 0 0 40px rgba(255,150,200,0.8);
-    }
+  // Nhạc
+  const btn = document.getElementById("playBtn");
+  const audio = document.getElementById("bgm");
+  btn.addEventListener("click", () => {
+    audio.muted = false;
+    audio.play();
+    btn.style.display = "none";
+  });
 
-    #displayText {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
-      text-align: center;
-      font-size: 42px;
-      font-family: 'Times New Roman', serif;
-      font-weight: bold;
-      color: black;
-      white-space: pre-wrap;
-      opacity: 0;
-      transition: opacity 1s ease;
-      text-shadow:
-        2px 2px 6px rgba(255,255,255,0.8),
-        2px 2px 8px rgba(0,0,0,0.4);
-    }
-    #displayText.show { opacity: 1; }
+  // Nút bắt đầu
+  startBtn.addEventListener("click", () => {
+    const text = document.getElementById("message").value.trim();
+    if (!text) return alert("Vui lòng nhập chữ!");
+    displayText.textContent = text;
+    displayText.classList.add("show"); // có transition
+    explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
-    .controls-left {
-      position: absolute;
-      left: 8%;
-      top: 70%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
-      padding: 10px 15px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 3;
-    }
-    .controls-left input {
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid gray;
-      text-align: center;
-      font-size: 16px;
-      width: 180px;
-    }
-    .controls-left button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: pink;
-      font-weight: bold;
-    }
+    startBtn.style.display = "none";
+    copyBtn.style.display = "inline-block";
+    // Reset delay 10s
+    setTimeout(() => resetBtn.style.display = "inline-block", 10000);
+  });
 
-    .controls-right {
-      position: absolute;
-      right: 8%;
-      top: 70%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-      z-index: 3;
-    }
-    #playBtn {
-      background: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #hint {
-      font-size: 18px;
-      font-weight: bold;
-      color: black;
-      background: rgba(255,255,255,0.7);
-      padding: 5px 15px;
-      border-radius: 8px;
-    }
+  // Sao chép link
+  copyBtn.addEventListener("click", () => {
+    const text = encodeURIComponent(document.getElementById("message").value.trim());
+    const url = window.location.origin + window.location.pathname + "?text=" + text;
+    navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
+  });
 
-    .petal {
-      position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: fall linear forwards;
-      user-select: none;
-      pointer-events: none;
-      z-index: 1;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
+  // Reset
+  resetBtn.addEventListener("click", () => location.reload());
 
-    .fragment {
-      position: fixed;
-      font-size: 24px;
-      pointer-events: none;
-      animation: fly var(--dur) forwards;
-      z-index: 12;
-    }
-    @keyframes fly {
-      to {
-        transform: translate(var(--dx), var(--dy)) scale(0.7) rotate(360deg);
-        opacity: 0;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="letterBox">
-    <img src="Love Letter.png" alt="Love Letter">
-    <div id="displayText"></div>
-  </div>
+  // Trang link đã sao chép
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("text")) {
+    const txt = decodeURIComponent(params.get("text"));
+    displayText.textContent = txt;
+    displayText.style.transition = "none";   // bỏ transition để hiện ngay
+    displayText.classList.add("show");       // hiện ngay
+    explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
-  <!-- controls bên trái -->
-  <div class="controls-left" id="inputBox">
-    <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
-    <button id="startBtn">Bắt đầu</button>
-    <button id="copyBtn" style="display:none;">Sao chép link</button>
-    <button id="resetBtn" style="display:none;">Reset</button>
-  </div>
-
-  <!-- controls bên phải -->
-  <div class="controls-right">
-    <button id="playBtn">Bật nhạc 🎵</button>
-    <div id="hint">Click chuột để nổ tim ❤️</div>
-  </div>
-
-  <audio id="bgm" loop muted>
-    <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    // Hoa rơi
-    function createPetal() {
-      const petal = document.createElement("div");
-      petal.classList.add("petal");
-      petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
-      petal.style.left = Math.random() * 100 + "vw";
-      petal.style.color = Math.random() > 0.5 ? "pink" : "red";
-      petal.style.fontSize = (Math.random() * 20 + 10) + "px";
-      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
-      document.body.appendChild(petal);
-      setTimeout(() => petal.remove(), 10000);
-    }
-    setInterval(createPetal, 80);
-
-    // Tim nổ
-    function explode(x, y, count, radius=150) {
-      for (let i = 0; i < count; i++) {
-        const frag = document.createElement("div");
-        frag.classList.add("fragment");
-        frag.textContent = Math.random() > 0.5 ? "❀" : "❤️";
-        frag.style.left = x + "px";
-        frag.style.top = y + "px";
-        frag.style.color = Math.random() > 0.5 ? "pink" : "red";
-        frag.style.fontSize = (Math.random() * 25 + 15) + "px";
-        const angle = Math.random() * Math.PI * 2;
-        const distance = radius + Math.random() * 80;
-        frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
-        frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
-        frag.style.setProperty("--dur", "1.5s");
-        document.body.appendChild(frag);
-        setTimeout(() => frag.remove(), 2000);
-      }
-    }
-
-    const displayText = document.getElementById("displayText");
-    const startBtn = document.getElementById("startBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const inputBox = document.getElementById("inputBox");
-
-    // Tim nổ khi click
-    document.addEventListener("click", (e) => {
-      if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
-      document.getElementById("hint").style.display = "none";
-      const x = e.clientX, y = e.clientY;
-      explode(x, y, 40, 120);
-    });
-
-    // Nhạc
-    const btn = document.getElementById("playBtn");
-    const audio = document.getElementById("bgm");
-    btn.addEventListener("click", () => {
-      audio.muted = false;
-      audio.play();
-      btn.style.display = "none";
-    });
-
-    // Nút bắt đầu
-    startBtn.addEventListener("click", () => {
-      const text = document.getElementById("message").value.trim();
-      if (!text) return alert("Vui lòng nhập chữ!");
-      displayText.textContent = text;
-      displayText.classList.add("show");
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
-
-      startBtn.style.display = "none";
-      copyBtn.style.display = "inline-block";
-      resetBtn.style.display = "inline-block";
-
-      // Reset sau 10s
-      setTimeout(() => resetBtn.style.display = "inline-block", 10000);
-    });
-
-    // Sao chép link
-    copyBtn.addEventListener("click", () => {
-      const text = encodeURIComponent(document.getElementById("message").value.trim());
-      const url = window.location.origin + window.location.pathname + "?text=" + text;
-      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
-    });
-
-    // Reset
-    resetBtn.addEventListener("click", () => location.reload());
-
-    // Trang link đã sao chép
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("text")) {
-      const txt = decodeURIComponent(params.get("text"));
-      displayText.textContent = txt;
-      displayText.classList.add("show");
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
-
-      // Ẩn toàn bộ input + reset
-      inputBox.style.display = "none";
-    }
-  </script>
-</body>
-</html>
+    // Ẩn toàn bộ input + reset
+    inputBox.style.display = "none";
+  }
+</script>
