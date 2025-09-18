@@ -6,37 +6,19 @@
   <style>
     body {
       margin: 0;
-      overflow: hidden;
       height: 100vh;
       background: black;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
     }
-    body::before, body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
-      z-index: 0;
-    }
-    body::after { right: 0; transform: scaleX(-1); }
-    body::before { left: 0; }
 
-    /* lá thư luôn ở giữa */
+    /* lá thư */
     .letterBox {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 5;
-      pointer-events: none;
-    }
-    .letterBox img,
-    .letterBox #displayText {
-      pointer-events: auto;
+      position: relative;
+      z-index: 2;
     }
     .letterBox img {
       height: 85vh;
@@ -51,7 +33,7 @@
       transform: translate(-50%, -50%);
       width: 70%;
       text-align: center;
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
       color: black;
       white-space: pre-wrap;
@@ -65,58 +47,62 @@
     #displayText.show { opacity: 1; }
 
     /* input bên trái */
-    #inputBox {
-      position: fixed;
-      left: 20px;
+    .controls-left {
+      position: absolute;
+      left: 8%;
       top: 50%;
       transform: translateY(-50%);
+      z-index: 2;
       background: rgba(255,255,255,0.8);
       padding: 10px 15px;
       border-radius: 10px;
       display: flex;
-      gap: 10px;
       flex-direction: column;
-      z-index: 10;
+      gap: 8px;
     }
-    #inputBox input {
-      padding: 5px;
+    .controls-left input {
+      padding: 6px;
       border-radius: 5px;
       border: 1px solid gray;
+      text-align: center;
+      font-size: 14px;
     }
-    #inputBox button {
-      padding: 5px 10px;
+    .controls-left button {
+      padding: 6px 12px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       background: pink;
+      font-weight: bold;
     }
 
-    /* nhạc + hint bên phải */
-    .rightBox {
-      position: fixed;
-      right: 20px;
+    /* bên phải */
+    .controls-right {
+      position: absolute;
+      right: 8%;
       top: 50%;
       transform: translateY(-50%);
+      z-index: 2;
       display: flex;
       flex-direction: column;
       gap: 15px;
       align-items: center;
-      z-index: 10;
     }
-    #playBtn {
+    .controls-right button {
       background: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 15px;
       cursor: pointer;
+      font-weight: bold;
     }
     #hint {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       color: black;
       background: rgba(255,255,255,0.7);
-      padding: 5px 15px;
+      padding: 6px 12px;
       border-radius: 8px;
     }
 
@@ -170,20 +156,20 @@
 <body>
   <div id="bigHeart">❤️</div>
 
-  <!-- lá thư ở giữa -->
+  <!-- lá thư -->
   <div class="letterBox">
     <img src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
   </div>
 
-  <!-- input bên trái -->
-  <div id="inputBox">
+  <!-- trái -->
+  <div class="controls-left">
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
     <button id="makeLink">Tạo link</button>
   </div>
 
-  <!-- nhạc + hint bên phải -->
-  <div class="rightBox">
+  <!-- phải -->
+  <div class="controls-right">
     <button id="playBtn">Bật nhạc 🎵</button>
     <div id="hint">Click chuột để nổ tim ❤️</div>
   </div>
@@ -193,7 +179,7 @@
   </audio>
 
   <script>
-    // hoa rơi
+    // mưa hoa
     function createPetal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
@@ -240,7 +226,7 @@
 
     // click -> tim nhỏ
     document.addEventListener("click", (e) => {
-      if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
+      if (e.target.closest(".controls-left") || e.target.closest(".controls-right")) return;
       document.getElementById("hint").style.display = "none";
       const x = e.clientX, y = e.clientY;
       const directions = [[1,0],[0,1],[-1,0],[0,-1],[0.7,0.7],[-0.7,0.7],[0.7,-0.7],[-0.7,-0.7]];
@@ -286,7 +272,7 @@
       const txt = decodeURIComponent(params.get("text"));
       displayText.textContent = txt;
       msgInput.value = txt;
-      document.getElementById("inputBox").style.display = "none";
+      document.querySelector(".controls-left").style.display = "none";
     }
   </script>
 </body>
