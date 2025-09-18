@@ -169,6 +169,7 @@
   </audio>
 
   <script>
+    // Hoa rơi
     function createPetal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
@@ -182,6 +183,7 @@
     }
     setInterval(createPetal, 80);
 
+    // Tim nổ
     function explode(x, y, count, radius=150) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
@@ -207,6 +209,7 @@
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
+    // Tim nổ khi click
     document.addEventListener("click", (e) => {
       if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
@@ -228,6 +231,7 @@
       });
     });
 
+    // Nhạc
     const btn = document.getElementById("playBtn");
     const audio = document.getElementById("bgm");
     btn.addEventListener("click", () => {
@@ -236,6 +240,7 @@
       btn.style.display = "none";
     });
 
+    // Nút bắt đầu
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
@@ -248,29 +253,34 @@
       resetBtn.style.display = "inline-block";
     });
 
+    // Sao chép link
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + "?text=" + text;
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
+    // Reset
     resetBtn.addEventListener("click", () => {
       window.location.href = window.location.pathname;
     });
 
+    // Trang link đã sao chép
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
       displayText.textContent = txt;
       displayText.classList.add("show");
+      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
-      // ẩn luôn ô nhập + nút bắt đầu nếu vào link
-      inputBox.innerHTML = `
-        <button id="resetBtn">Reset</button>
-      `;
-      document.getElementById("resetBtn").addEventListener("click", () => {
-        window.location.href = window.location.pathname;
-      });
+      // Ẩn input, hiện reset sau 10 giây
+      inputBox.innerHTML = ``;
+      setTimeout(() => {
+        inputBox.innerHTML = `<button id="resetBtn">Reset</button>`;
+        document.getElementById("resetBtn").addEventListener("click", () => {
+          window.location.href = window.location.pathname;
+        });
+      }, 10000);
     }
   </script>
 </body>
