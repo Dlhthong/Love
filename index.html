@@ -25,24 +25,14 @@
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    /* bố cục chính */
-    .main {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      z-index: 2;
-    }
-
-    /* lá thư luôn giữa */
+    /* lá thư luôn ở giữa */
     .letterBox {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 5;
-      pointer-events: none; /* không chặn click bên ngoài */
+      pointer-events: none;
     }
     .letterBox img,
     .letterBox #displayText {
@@ -76,6 +66,10 @@
 
     /* input bên trái */
     #inputBox {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
       background: rgba(255,255,255,0.8);
       padding: 10px 15px;
       border-radius: 10px;
@@ -97,8 +91,12 @@
       background: pink;
     }
 
-    /* bên phải (nút nhạc + hint) */
+    /* nhạc + hint bên phải */
     .rightBox {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
       gap: 15px;
@@ -172,24 +170,22 @@
 <body>
   <div id="bigHeart">❤️</div>
 
-  <div class="main">
-    <!-- trái: input -->
-    <div id="inputBox">
-      <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
-      <button id="makeLink">Tạo link</button>
-    </div>
+  <!-- lá thư ở giữa -->
+  <div class="letterBox">
+    <img src="Love Letter.png" alt="Love Letter">
+    <div id="displayText"></div>
+  </div>
 
-    <!-- giữa: bức thư -->
-    <div class="letterBox">
-      <img src="Love Letter.png" alt="Love Letter">
-      <div id="displayText"></div>
-    </div>
+  <!-- input bên trái -->
+  <div id="inputBox">
+    <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
+    <button id="makeLink">Tạo link</button>
+  </div>
 
-    <!-- phải: nhạc + hint -->
-    <div class="rightBox">
-      <button id="playBtn">Bật nhạc 🎵</button>
-      <div id="hint">Click chuột để nổ tim ❤️</div>
-    </div>
+  <!-- nhạc + hint bên phải -->
+  <div class="rightBox">
+    <button id="playBtn">Bật nhạc 🎵</button>
+    <div id="hint">Click chuột để nổ tim ❤️</div>
   </div>
 
   <audio id="bgm" loop muted>
