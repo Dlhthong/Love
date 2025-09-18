@@ -8,17 +8,39 @@
       margin: 0;
       height: 100vh;
       background: black;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    /* nền hai bên */
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
+      z-index: 0;
+    }
+    body::after { right: 0; transform: scaleX(-1); }
+    body::before { left: 0; }
+
+    /* container chính */
+    .main {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
+      gap: 20px;
+      z-index: 2;
     }
 
     /* lá thư */
     .letterBox {
       position: relative;
-      z-index: 2;
     }
     .letterBox img {
       height: 85vh;
@@ -33,7 +55,7 @@
       transform: translate(-50%, -50%);
       width: 70%;
       text-align: center;
-      font-size: 32px;
+      font-size: 34px;
       font-weight: bold;
       color: black;
       white-space: pre-wrap;
@@ -47,62 +69,49 @@
     #displayText.show { opacity: 1; }
 
     /* input bên trái */
-    .controls-left {
-      position: absolute;
-      left: 8%;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
+    #inputBox {
       background: rgba(255,255,255,0.8);
       padding: 10px 15px;
       border-radius: 10px;
       display: flex;
+      gap: 10px;
       flex-direction: column;
-      gap: 8px;
     }
-    .controls-left input {
-      padding: 6px;
+    #inputBox input {
+      padding: 5px;
       border-radius: 5px;
       border: 1px solid gray;
       text-align: center;
-      font-size: 14px;
     }
-    .controls-left button {
-      padding: 6px 12px;
+    #inputBox button {
+      padding: 5px 10px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       background: pink;
-      font-weight: bold;
     }
 
-    /* bên phải */
-    .controls-right {
-      position: absolute;
-      right: 8%;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
+    /* bên phải (nút nhạc + hint) */
+    .rightBox {
       display: flex;
       flex-direction: column;
       gap: 15px;
       align-items: center;
     }
-    .controls-right button {
+    #playBtn {
       background: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 15px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
       cursor: pointer;
-      font-weight: bold;
     }
     #hint {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       color: black;
       background: rgba(255,255,255,0.7);
-      padding: 6px 12px;
+      padding: 5px 15px;
       border-radius: 8px;
     }
 
@@ -156,22 +165,24 @@
 <body>
   <div id="bigHeart">❤️</div>
 
-  <!-- lá thư -->
-  <div class="letterBox">
-    <img src="Love Letter.png" alt="Love Letter">
-    <div id="displayText"></div>
-  </div>
+  <div class="main">
+    <!-- trái: input -->
+    <div id="inputBox">
+      <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
+      <button id="makeLink">Tạo link</button>
+    </div>
 
-  <!-- trái -->
-  <div class="controls-left">
-    <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
-    <button id="makeLink">Tạo link</button>
-  </div>
+    <!-- giữa: bức thư -->
+    <div class="letterBox">
+      <img src="Love Letter.png" alt="Love Letter">
+      <div id="displayText"></div>
+    </div>
 
-  <!-- phải -->
-  <div class="controls-right">
-    <button id="playBtn">Bật nhạc 🎵</button>
-    <div id="hint">Click chuột để nổ tim ❤️</div>
+    <!-- phải: nhạc + hint -->
+    <div class="rightBox">
+      <button id="playBtn">Bật nhạc 🎵</button>
+      <div id="hint">Click chuột để nổ tim ❤️</div>
+    </div>
   </div>
 
   <audio id="bgm" loop muted>
@@ -226,7 +237,7 @@
 
     // click -> tim nhỏ
     document.addEventListener("click", (e) => {
-      if (e.target.closest(".controls-left") || e.target.closest(".controls-right")) return;
+      if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
       const x = e.clientX, y = e.clientY;
       const directions = [[1,0],[0,1],[-1,0],[0,-1],[0.7,0.7],[-0.7,0.7],[0.7,-0.7],[-0.7,-0.7]];
@@ -272,7 +283,7 @@
       const txt = decodeURIComponent(params.get("text"));
       displayText.textContent = txt;
       msgInput.value = txt;
-      document.querySelector(".controls-left").style.display = "none";
+      document.getElementById("inputBox").style.display = "none";
     }
   </script>
 </body>
