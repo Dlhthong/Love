@@ -57,6 +57,7 @@
     }
     #displayText.show { opacity: 1; }
 
+    /* Emoji mở đầu */
     #bigEmoji {
       position: absolute;
       top: 50%;
@@ -64,6 +65,7 @@
       transform: translate(-50%, -50%);
       font-size: 80px;
       z-index: 5;
+      cursor: pointer;
       user-select: none;
       transition: opacity 0.5s ease;
     }
@@ -243,12 +245,12 @@
       btn.style.display = "none";
     });
 
-    // Bắt đầu
+    // Nút bắt đầu
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
 
-      // Emoji mở đầu nổ
+      // Emoji to nổ tung
       const rect = bigEmoji.getBoundingClientRect();
       explode(rect.left + rect.width/2, rect.top + rect.height/2, 120, 400);
       bigEmoji.classList.add("hide");
@@ -262,7 +264,7 @@
       setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
-    // Copy link
+    // Sao chép link
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + "?text=" + text;
@@ -272,7 +274,7 @@
     // Reset
     resetBtn.addEventListener("click", () => location.reload());
 
-    // Nếu mở link copy
+    // Trang link copy
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
