@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Love Letter</title>
+  <!-- Font chữ lãng mạn -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -25,7 +27,7 @@
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    /* lá thư cố định giữa */
+    /* lá thư ở giữa */
     .letterBox {
       position: absolute;
       top: 50%;
@@ -39,6 +41,8 @@
       border-radius: 12px;
       box-shadow: 0 0 40px rgba(255,150,200,0.8);
     }
+
+    /* chữ trong thư */
     #displayText {
       position: absolute;
       top: 50%;
@@ -46,65 +50,68 @@
       transform: translate(-50%, -50%);
       width: 70%;
       text-align: center;
-      font-size: 32px;
+      font-size: 48px;
+      font-family: 'Dancing Script', cursive;
       font-weight: bold;
-      color: black;
+      color: #d6005c;
       white-space: pre-wrap;
       opacity: 0;
       transition: opacity 1s ease;
       text-shadow:
-        0 0 6px #fff,
-        0 0 12px #fff,
-        1px 1px 2px rgba(0,0,0,0.8);
+        0 0 8px #fff,
+        0 0 16px #ff80bf,
+        0 0 24px #ff4da6,
+        2px 2px 4px rgba(0,0,0,0.6);
     }
     #displayText.show { opacity: 1; }
 
     /* input bên trái */
-    #inputBox {
+    .controls-left {
       position: absolute;
       left: 8%;
-      top: 50%;
+      top: 70%;
       transform: translateY(-50%);
       background: rgba(255,255,255,0.8);
       padding: 10px 15px;
       border-radius: 10px;
       display: flex;
-      gap: 10px;
       flex-direction: column;
-      z-index: 2;
+      gap: 10px;
+      z-index: 3;
     }
-    #inputBox input {
-      padding: 5px;
-      border-radius: 5px;
+    .controls-left input {
+      padding: 6px;
+      border-radius: 6px;
       border: 1px solid gray;
       text-align: center;
       font-size: 16px;
+      width: 180px;
     }
-    #inputBox button {
-      padding: 6px 10px;
+    .controls-left button {
+      padding: 6px 12px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
       background: pink;
       font-weight: bold;
     }
 
-    /* bên phải (nút nhạc + hint) */
-    .rightBox {
+    /* bên phải */
+    .controls-right {
       position: absolute;
       right: 8%;
-      top: 50%;
+      top: 70%;
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
       gap: 15px;
       align-items: center;
-      z-index: 2;
+      z-index: 3;
     }
     #playBtn {
       background: white;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
@@ -118,7 +125,7 @@
       border-radius: 8px;
     }
 
-    /* hoa rơi */
+    /* hiệu ứng hoa rơi */
     .petal {
       position: fixed;
       top: -10px;
@@ -149,7 +156,6 @@
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
 
-    /* mảnh tim nổ */
     .fragment {
       position: fixed;
       font-size: 24px;
@@ -166,34 +172,32 @@
   </style>
 </head>
 <body>
-  <!-- tim nổ ban đầu -->
   <div id="bigHeart">❤️</div>
 
-  <!-- trái: input -->
-  <div id="inputBox">
-    <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
-    <button id="makeLink">Tạo link</button>
-  </div>
-
-  <!-- giữa: bức thư -->
+  <!-- lá thư -->
   <div class="letterBox">
     <img src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
   </div>
 
-  <!-- phải: nhạc + hint -->
-  <div class="rightBox">
+  <!-- bên trái -->
+  <div class="controls-left" id="inputBox">
+    <input type="text" id="message" placeholder="Nhập chữ bạn muốn..." maxlength="15">
+    <button id="makeLink">Tạo link</button>
+  </div>
+
+  <!-- bên phải -->
+  <div class="controls-right">
     <button id="playBtn">Bật nhạc 🎵</button>
     <div id="hint">Click chuột để nổ tim ❤️</div>
   </div>
 
-  <!-- nhạc -->
   <audio id="bgm" loop muted>
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    // mưa hoa
+    // hoa rơi
     function createPetal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
