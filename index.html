@@ -9,28 +9,26 @@
       height: 100vh;
       background: black;
       overflow: hidden;
-      font-family: "Times New Roman", serif;
+      font-family: Arial, sans-serif;
     }
 
-    /* Background hai bên */
     body::before, body::after {
       content: "";
       position: absolute;
       top: 0;
       width: 50%;
       height: 100%;
-      background: url("https://picsum.photos/600/900?grayscale") no-repeat center/cover;
+      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
       z-index: 0;
     }
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    /* Bức thư */
     .letterBox {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       z-index: 2;
     }
     .letterBox img {
@@ -39,6 +37,7 @@
       border-radius: 12px;
       box-shadow: 0 0 40px rgba(255,150,200,0.8);
     }
+
     #displayText {
       position: absolute;
       top: 50%;
@@ -46,58 +45,57 @@
       transform: translate(-50%, -50%);
       width: 70%;
       text-align: center;
-      font-size: 40px;
+      font-size: 42px;
+      font-family: 'Times New Roman', serif;
       font-weight: bold;
       color: black;
       white-space: pre-wrap;
       opacity: 0;
       transition: opacity 1s ease;
       text-shadow:
-        0 0 6px #fff,
-        0 0 12px #fff,
-        1px 1px 2px rgba(0,0,0,0.8);
+        2px 2px 6px rgba(255,255,255,0.8),
+        2px 2px 8px rgba(0,0,0,0.4);
     }
     #displayText.show { opacity: 1; }
 
-    /* Input bên trái */
-    #inputBox {
+    .controls-left {
       position: absolute;
       left: 8%;
-      top: 65%;
+      top: 70%;
       transform: translateY(-50%);
       background: rgba(255,255,255,0.8);
       padding: 10px 15px;
       border-radius: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       z-index: 3;
     }
-    #inputBox input {
+    .controls-left input {
       padding: 6px;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid gray;
-      font-size: 14px;
       text-align: center;
+      font-size: 16px;
+      width: 180px;
     }
-    #inputBox button {
-      padding: 6px 10px;
+    .controls-left button {
+      padding: 6px 12px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
       background: pink;
       font-weight: bold;
     }
 
-    /* Bên phải */
-    .rightBox {
+    .controls-right {
       position: absolute;
       right: 8%;
-      top: 65%;
+      top: 70%;
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 15px;
       align-items: center;
       z-index: 3;
     }
@@ -110,15 +108,14 @@
       cursor: pointer;
     }
     #hint {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       color: black;
       background: rgba(255,255,255,0.7);
-      padding: 5px 12px;
+      padding: 5px 15px;
       border-radius: 8px;
     }
 
-    /* Hoa rơi */
     .petal {
       position: fixed;
       top: -10px;
@@ -132,7 +129,6 @@
       to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
-    /* Tim nổ */
     .fragment {
       position: fixed;
       font-size: 24px;
@@ -146,50 +142,30 @@
         opacity: 0;
       }
     }
-
-    /* Tim lớn ban đầu */
-    #bigHeart {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      font-size: 120px;
-      color: red;
-      z-index: 15;
-      transform: translate(-50%, -50%) scale(0);
-      animation: popIn 1.5s ease-out forwards;
-    }
-    @keyframes popIn {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-      60% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
   </style>
 </head>
 <body>
-  <div id="bigHeart">❤️</div>
-
-  <!-- Lá thư -->
   <div class="letterBox">
-    <img src="https://i.imgur.com/Tx0gB0P.png" alt="Love Letter">
+    <img src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
   </div>
 
-  <!-- Trái -->
-  <div id="inputBox">
+  <!-- controls bên trái -->
+  <div class="controls-left" id="inputBox">
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
     <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
-  <!-- Phải -->
-  <div class="rightBox">
+  <!-- controls bên phải -->
+  <div class="controls-right">
     <button id="playBtn">Bật nhạc 🎵</button>
     <div id="hint">Click chuột để nổ tim ❤️</div>
   </div>
 
   <audio id="bgm" loop muted>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -207,7 +183,7 @@
     }
     setInterval(createPetal, 80);
 
-    // Nổ tim
+    // Tim nổ
     function explode(x, y, count, radius=150) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
@@ -227,9 +203,19 @@
       }
     }
 
-    // Tim lớn lúc đầu
-    const bigHeart = document.getElementById("bigHeart");
-    setTimeout(() => { bigHeart.style.display = "none"; }, 1500);
+    const displayText = document.getElementById("displayText");
+    const startBtn = document.getElementById("startBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const inputBox = document.getElementById("inputBox");
+
+    // Tim nổ khi click
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
+      document.getElementById("hint").style.display = "none";
+      const x = e.clientX, y = e.clientY;
+      explode(x, y, 40, 120);
+    });
 
     // Nhạc
     const btn = document.getElementById("playBtn");
@@ -240,12 +226,7 @@
       btn.style.display = "none";
     });
 
-    const displayText = document.getElementById("displayText");
-    const startBtn = document.getElementById("startBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const inputBox = document.getElementById("inputBox");
-
+    // Nút bắt đầu
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
@@ -255,31 +236,31 @@
 
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
+      resetBtn.style.display = "inline-block";
+
+      // Reset sau 10s
       setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
+    // Sao chép link
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + "?text=" + text;
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
+    // Reset
     resetBtn.addEventListener("click", () => location.reload());
 
-    document.addEventListener("click", (e) => {
-      if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
-      document.getElementById("hint").style.display = "none";
-      explode(e.clientX, e.clientY, 40, 120);
-    });
-
+    // Trang link đã sao chép
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
       displayText.textContent = txt;
-      displayText.style.transition = "none";
       displayText.classList.add("show");
       explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
+      // Ẩn toàn bộ input + reset
       inputBox.style.display = "none";
     }
   </script>
