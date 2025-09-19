@@ -142,7 +142,7 @@
       }
     }
 
-    /* trái tim lớn ban đầu */
+    /* Trái tim lớn ban đầu */
     #bigHeart {
       position: fixed;
       top: 50%;
@@ -171,6 +171,9 @@
   </style>
 </head>
 <body>
+  <!-- Trái tim to ban đầu -->
+  <div id="bigHeart">❤️</div>
+
   <div class="letterBox">
     <img src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
@@ -194,9 +197,6 @@
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- trái tim lớn ban đầu -->
-  <div id="bigHeart">❤️</div>
-
   <script>
     // Hoa rơi
     function createPetal() {
@@ -212,18 +212,18 @@
     }
     setInterval(createPetal, 80);
 
-    // Tim nổ cơ bản (cho click chuột)
+    // Tim nổ cơ bản (dùng cho click)
     function explode(x, y, count, radius=150) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
         frag.classList.add("fragment");
-        frag.textContent = "❤️"; // click chỉ ra tim
+        frag.textContent = "❤️"; // click chỉ nổ tim nhỏ
         frag.style.left = x + "px";
         frag.style.top = y + "px";
         frag.style.color = "red";
         frag.style.fontSize = (Math.random() * 20 + 10) + "px";
         const angle = Math.random() * Math.PI * 2;
-        const distance = radius + Math.random() * 60;
+        const distance = radius + Math.random() * 80;
         frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
         frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
         frag.style.setProperty("--dur", "1.2s");
@@ -232,12 +232,12 @@
       }
     }
 
-    // Nổ hoành tráng cho trái tim ban đầu
+    // Tim nổ hoành tráng (dùng cho trái tim ban đầu)
     function grandExplosion(x, y, count=150, radius=400) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
         frag.classList.add("fragment");
-        frag.textContent = Math.random() > 0.3 ? "❀" : "❤️"; // nhiều hoa hơn
+        frag.textContent = Math.random() > 0.3 ? "❀" : "❤️";
         frag.style.left = x + "px";
         frag.style.top = y + "px";
         frag.style.color = Math.random() > 0.5 ? "pink" : "red";
@@ -304,20 +304,20 @@
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
+      grandExplosion(window.innerWidth/2, window.innerHeight/2);
       displayText.textContent = txt;
       displayText.classList.add("show");
       inputBox.style.display = "none";
     }
 
-    // Trái tim lớn ban đầu nổ khác biệt
+    // Trái tim lớn ban đầu nổ khi animation kết thúc
     window.addEventListener("load", () => {
       const bigHeart = document.getElementById("bigHeart");
-      setTimeout(() => {
+      bigHeart.addEventListener("animationend", () => {
         grandExplosion(window.innerWidth/2, window.innerHeight/2);
         bigHeart.classList.add("fadeOut");
         setTimeout(() => bigHeart.remove(), 800);
-      }, 1000);
+      });
     });
   </script>
 </body>
