@@ -212,7 +212,7 @@
       setTimeout(() => ripple.remove(), 1000);
     }
 
-    // Hiệu ứng burst (click chuột)
+    // Burst ngẫu nhiên
     function burstExplode(x, y, count = 50, radius = 200) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
@@ -223,7 +223,6 @@
         frag.style.color = Math.random() > 0.5 ? "pink" : "red";
         frag.style.fontSize = (Math.random() * 25 + 15) + "px";
 
-        // random xoáy
         const angle = Math.random() * Math.PI * 2;
         const distance = radius + Math.random() * 150;
         frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
@@ -235,7 +234,29 @@
       }
     }
 
-    // Trái tim to nhấp nháy rồi nổ
+    // Explosion xoắn ốc
+    function spiralExplode(x, y, count = 80, radius = 300) {
+      for (let i = 0; i < count; i++) {
+        const frag = document.createElement("div");
+        frag.classList.add("fragment");
+        frag.textContent = Math.random() > 0.5 ? "❀" : "❤️";
+        frag.style.left = x + "px";
+        frag.style.top = y + "px";
+        frag.style.color = Math.random() > 0.5 ? "pink" : "red";
+        frag.style.fontSize = (Math.random() * 20 + 15) + "px";
+
+        const angle = i * (Math.PI / 6); // góc xoắn
+        const distance = radius + i * 5;
+        frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+        frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
+        frag.style.setProperty("--dur", "1.8s");
+
+        document.body.appendChild(frag);
+        setTimeout(() => frag.remove(), 2000);
+      }
+    }
+
+    // Trái tim to nhấp nháy rồi nổ (giờ là xoắn ốc)
     function bigHeartExplosion(callback) {
       const heart = document.createElement("div");
       heart.textContent = "❤️";
@@ -250,7 +271,7 @@
 
       setTimeout(() => {
         heart.remove();
-        burstExplode(window.innerWidth/2, window.innerHeight/2, 100, 200);
+        spiralExplode(window.innerWidth/2, window.innerHeight/2, 100, 150);
         if (callback) callback();
       }, 1500);
     }
@@ -261,7 +282,7 @@
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
-    // Click event => ripple + burst explode
+    // Click event => ripple + burst
     document.addEventListener("click", (e) => {
       if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
