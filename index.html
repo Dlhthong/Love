@@ -187,33 +187,8 @@
     }
     setInterval(createPetal, 80);
 
-    // Ripple effect
-    function rippleEffect(x, y) {
-      const ripple = document.createElement("div");
-      ripple.style.position = "fixed";
-      ripple.style.left = x + "px";
-      ripple.style.top = y + "px";
-      ripple.style.width = "20px";
-      ripple.style.height = "20px";
-      ripple.style.border = "2px solid rgba(255,100,150,0.8)";
-      ripple.style.borderRadius = "50%";
-      ripple.style.transform = "translate(-50%, -50%) scale(0)";
-      ripple.style.opacity = "1";
-      ripple.style.zIndex = "5";
-      ripple.style.pointerEvents = "none";
-      ripple.style.transition = "transform 1s ease-out, opacity 1s ease-out";
-      document.body.appendChild(ripple);
-
-      requestAnimationFrame(() => {
-        ripple.style.transform = "translate(-50%, -50%) scale(10)";
-        ripple.style.opacity = "0";
-      });
-
-      setTimeout(() => ripple.remove(), 1000);
-    }
-
-    // Burst ngẫu nhiên
-    function burstExplode(x, y, count = 50, radius = 200) {
+    // Burst ngẫu nhiên (click dùng)
+    function burstExplode(x, y, count = 60, radius = 200) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
         frag.classList.add("fragment");
@@ -234,8 +209,8 @@
       }
     }
 
-    // Explosion xoắn ốc
-    function spiralExplode(x, y, count = 80, radius = 300) {
+    // Explosion vòng tròn (dùng khi bắt đầu)
+    function circleExplode(x, y, count = 40, radius = 200) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
         frag.classList.add("fragment");
@@ -245,10 +220,9 @@
         frag.style.color = Math.random() > 0.5 ? "pink" : "red";
         frag.style.fontSize = (Math.random() * 20 + 15) + "px";
 
-        const angle = i * (Math.PI / 6); // góc xoắn
-        const distance = radius + i * 5;
-        frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
-        frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
+        const angle = (i / count) * (Math.PI * 2); // chia đều theo vòng tròn
+        frag.style.setProperty("--dx", Math.cos(angle) * radius + "px");
+        frag.style.setProperty("--dy", Math.sin(angle) * radius + "px");
         frag.style.setProperty("--dur", "1.8s");
 
         document.body.appendChild(frag);
@@ -256,7 +230,7 @@
       }
     }
 
-    // Trái tim to nhấp nháy rồi nổ (giờ là xoắn ốc)
+    // Trái tim to nhấp nháy rồi nổ (theo vòng tròn)
     function bigHeartExplosion(callback) {
       const heart = document.createElement("div");
       heart.textContent = "❤️";
@@ -271,7 +245,7 @@
 
       setTimeout(() => {
         heart.remove();
-        spiralExplode(window.innerWidth/2, window.innerHeight/2, 100, 150);
+        circleExplode(window.innerWidth/2, window.innerHeight/2, 60, 200);
         if (callback) callback();
       }, 1500);
     }
@@ -282,13 +256,11 @@
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
-    // Click event => ripple + burst
+    // Click event => nổ burst ngẫu nhiên
     document.addEventListener("click", (e) => {
       if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
-      const x = e.clientX, y = e.clientY;
-      rippleEffect(x, y);
-      burstExplode(x, y, 60, 150);
+      burstExplode(e.clientX, e.clientY, 50, 150);
     });
 
     // Nhạc
