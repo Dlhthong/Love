@@ -182,8 +182,33 @@
     }
     setInterval(createPetal, 80);
 
-    // Tim nổ
-    function explode(x, y, count, radius=150) {
+    // Hiệu ứng gợn sóng tại vị trí click
+    function rippleEffect(x, y) {
+      const ripple = document.createElement("div");
+      ripple.style.position = "fixed";
+      ripple.style.left = x + "px";
+      ripple.style.top = y + "px";
+      ripple.style.width = "20px";
+      ripple.style.height = "20px";
+      ripple.style.border = "2px solid rgba(255,100,150,0.8)";
+      ripple.style.borderRadius = "50%";
+      ripple.style.transform = "translate(-50%, -50%) scale(0)";
+      ripple.style.opacity = "1";
+      ripple.style.zIndex = "5";
+      ripple.style.pointerEvents = "none";
+      ripple.style.transition = "transform 1s ease-out, opacity 1s ease-out";
+      document.body.appendChild(ripple);
+
+      requestAnimationFrame(() => {
+        ripple.style.transform = "translate(-50%, -50%) scale(10)";
+        ripple.style.opacity = "0";
+      });
+
+      setTimeout(() => ripple.remove(), 1000);
+    }
+
+    // Hiệu ứng nổ xoắn ốc
+    function spiralExplode(x, y, count = 50, radius = 200) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
         frag.classList.add("fragment");
@@ -192,13 +217,15 @@
         frag.style.top = y + "px";
         frag.style.color = Math.random() > 0.5 ? "pink" : "red";
         frag.style.fontSize = (Math.random() * 25 + 15) + "px";
-        const angle = Math.random() * Math.PI * 2;
-        const distance = radius + Math.random() * 80;
+
+        const angle = i * (Math.PI / 6); // tạo vòng xoắn
+        const distance = radius + (i * 5);
         frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
         frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
-        frag.style.setProperty("--dur", "1.5s");
+        frag.style.setProperty("--dur", "2s");
+
         document.body.appendChild(frag);
-        setTimeout(() => frag.remove(), 2000);
+        setTimeout(() => frag.remove(), 2200);
       }
     }
 
@@ -208,12 +235,13 @@
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
-    // Tim nổ khi click
+    // Click event => ripple + spiral explode
     document.addEventListener("click", (e) => {
       if (e.target.closest("#inputBox") || e.target.id === "playBtn") return;
       document.getElementById("hint").style.display = "none";
       const x = e.clientX, y = e.clientY;
-      explode(x, y, 40, 120);
+      rippleEffect(x, y);
+      spiralExplode(x, y, 60, 120);
     });
 
     // Nhạc
@@ -231,13 +259,12 @@
       if (!text) return alert("Vui lòng nhập chữ!");
       displayText.textContent = text;
       displayText.classList.add("show");
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
+      spiralExplode(window.innerWidth/2, window.innerHeight/2, 120, 400);
 
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
       resetBtn.style.display = "inline-block";
 
-      // Reset sau 10s
       setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
@@ -255,13 +282,9 @@
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
-
-      // Nổ tim + hiện chữ cùng lúc
-      explode(window.innerWidth/2, window.innerHeight/2, 120, 400);
+      spiralExplode(window.innerWidth/2, window.innerHeight/2, 120, 400);
       displayText.textContent = txt;
       displayText.classList.add("show");
-
-      // Ẩn toàn bộ input + reset
       inputBox.style.display = "none";
     }
   </script>
