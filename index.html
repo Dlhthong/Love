@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Love Letter - Multi Theme</title>
+  <title>Love Letter</title>
   <style>
     body {
       margin: 0;
@@ -57,23 +57,6 @@
     }
     #displayText.show { opacity: 1; }
 
-    /* Emoji mở đầu */
-    #bigEmoji {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 80px;
-      z-index: 5;
-      cursor: pointer;
-      user-select: none;
-      transition: opacity 0.5s ease;
-    }
-    #bigEmoji.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-
     .controls-left {
       position: absolute;
       left: 8%;
@@ -87,13 +70,13 @@
       gap: 6px;
       z-index: 3;
     }
-    .controls-left input, .controls-left select {
+    .controls-left input {
       padding: 6px;
       border-radius: 6px;
       border: 1px solid gray;
       text-align: center;
       font-size: 16px;
-      width: 200px;
+      width: 180px;
     }
     .controls-left button {
       padding: 6px 12px;
@@ -158,25 +141,39 @@
         opacity: 0;
       }
     }
+
+    /* Emoji mở đầu */
+    #bigEmoji {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 80px;
+      z-index: 5;
+      opacity: 0;
+      animation: blink 1s infinite alternate;
+      transition: opacity 0.5s ease;
+    }
+    #bigEmoji.show { opacity: 1; }
+    #bigEmoji.hide { opacity: 0; pointer-events: none; }
+
+    @keyframes blink {
+      from { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      to   { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <!-- Emoji mở đầu to -->
-  <div id="bigEmoji">❤️</div>
-
   <div class="letterBox">
     <img src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
   </div>
 
+  <!-- Emoji mở đầu -->
+  <div id="bigEmoji">❤️</div>
+
   <!-- controls bên trái -->
   <div class="controls-left" id="inputBox">
-    <select id="themeSelect">
-      <option value="love">❤️ Tình yêu</option>
-      <option value="exam">🍀 Thi cử</option>
-      <option value="family">🏡 Gia đình</option>
-      <option value="friends">🎉 Bạn bè</option>
-    </select>
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
@@ -186,7 +183,7 @@
   <!-- controls bên phải -->
   <div class="controls-right">
     <button id="playBtn">Bật nhạc 🎵</button>
-    <div id="hint">Click chuột để nổ ❤️</div>
+    <div id="hint">Click chuột để nổ tim ❤️</div>
   </div>
 
   <audio id="bgm" loop muted>
@@ -194,47 +191,29 @@
   </audio>
 
   <script>
-    // 🎭 Chủ đề và Emoji
-    const themes = {
-      love: { fall:["❀","❤️"], click:"❤️", mini:["❀","❤️"], big:"❤️" },
-      exam: { fall:["🍀","💯"], click:"🍀", mini:["🍀","💯"], big:"🍀" },
-      family: { fall:["🏡","👨‍👩‍👧‍👦"], click:"👨‍👩‍👧‍👦", mini:["🏡","👨‍👩‍👧‍👦"], big:"👨‍👩‍👧‍👦" },
-      friends: { fall:["🎉","🤝"], click:"🎉", mini:["🎉","🤝"], big:"🎉" }
-    };
-
-    let currentTheme = "love";
-    const bigEmoji = document.getElementById("bigEmoji");
-
-    document.getElementById("themeSelect").addEventListener("change", e => {
-      currentTheme = e.target.value;
-      bigEmoji.textContent = themes[currentTheme].big;
-      document.getElementById("hint").textContent =
-        "Click chuột để nổ " + themes[currentTheme].click;
-    });
-
-    // 🌸 Emoji rơi
+    // Hoa rơi
     function createPetal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
-      const arr = themes[currentTheme].fall;
-      petal.innerHTML = arr[Math.floor(Math.random() * arr.length)];
+      petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
       petal.style.left = Math.random() * 100 + "vw";
+      petal.style.color = Math.random() > 0.5 ? "pink" : "red";
       petal.style.fontSize = (Math.random() * 20 + 10) + "px";
       petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
       document.body.appendChild(petal);
       setTimeout(() => petal.remove(), 10000);
     }
-    setInterval(createPetal, 100);
+    setInterval(createPetal, 80);
 
-    // 💥 Emoji nổ
+    // Tim nổ
     function explode(x, y, count, radius=150) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
         frag.classList.add("fragment");
-        const arr = themes[currentTheme].mini;
-        frag.textContent = arr[Math.floor(Math.random() * arr.length)];
+        frag.textContent = Math.random() > 0.5 ? "❀" : "❤️";
         frag.style.left = x + "px";
         frag.style.top = y + "px";
+        frag.style.color = Math.random() > 0.5 ? "pink" : "red";
         frag.style.fontSize = (Math.random() * 25 + 15) + "px";
         const angle = Math.random() * Math.PI * 2;
         const distance = radius + Math.random() * 80;
@@ -251,6 +230,18 @@
     const copyBtn = document.getElementById("copyBtn");
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
+    const bigEmoji = document.getElementById("bigEmoji");
+
+    // Hiệu ứng emoji to nổ
+    function showAndExplodeBigEmoji(callback) {
+      bigEmoji.classList.add("show");
+      setTimeout(() => {
+        const rect = bigEmoji.getBoundingClientRect();
+        explode(rect.left + rect.width/2, rect.top + rect.height/2, 80, 250);
+        bigEmoji.classList.add("hide");
+        if (callback) callback();
+      }, 1000); // nổ sau 1 giây
+    }
 
     // Tim nổ khi click
     document.addEventListener("click", (e) => {
@@ -272,49 +263,34 @@
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
-
-      // Emoji mở đầu nổ
-      const rect = bigEmoji.getBoundingClientRect();
-      explode(rect.left + rect.width/2, rect.top + rect.height/2, 120, 400);
-      bigEmoji.classList.add("hide");
-
-      // Hiện chữ
       displayText.textContent = text;
       displayText.classList.add("show");
-
+      showAndExplodeBigEmoji();
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
-      resetBtn.style.display = "none"; 
       setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
     // Sao chép link
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
-      const url = window.location.origin + window.location.pathname + "?text=" + text + "&theme=" + currentTheme;
+      const url = window.location.origin + window.location.pathname + "?text=" + text;
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
     // Reset
     resetBtn.addEventListener("click", () => location.reload());
 
-    // Trang link copy
+    // Trang link đã sao chép
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
-      if (params.has("theme")) currentTheme = params.get("theme");
-      bigEmoji.textContent = themes[currentTheme].big;
-
-      // Nổ emoji to + hiện chữ
-      setTimeout(() => {
-        const rect = bigEmoji.getBoundingClientRect();
-        explode(rect.left + rect.width/2, rect.top + rect.height/2, 120, 400);
-        bigEmoji.classList.add("hide");
-        displayText.textContent = txt;
-        displayText.classList.add("show");
-      }, 800);
-
+      displayText.textContent = txt;
+      displayText.classList.add("show");
       inputBox.style.display = "none";
+      window.addEventListener("load", () => {
+        showAndExplodeBigEmoji();
+      });
     }
   </script>
 </body>
