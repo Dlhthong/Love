@@ -141,6 +141,11 @@
         opacity: 0;
       }
     }
+
+    @keyframes blink {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+    }
   </style>
 </head>
 <body>
@@ -182,7 +187,7 @@
     }
     setInterval(createPetal, 80);
 
-    // Hiệu ứng gợn sóng tại vị trí click
+    // Ripple effect
     function rippleEffect(x, y) {
       const ripple = document.createElement("div");
       ripple.style.position = "fixed";
@@ -207,7 +212,7 @@
       setTimeout(() => ripple.remove(), 1000);
     }
 
-    // Hiệu ứng nổ xoắn ốc
+    // Spiral explode
     function spiralExplode(x, y, count = 50, radius = 200) {
       for (let i = 0; i < count; i++) {
         const frag = document.createElement("div");
@@ -218,7 +223,7 @@
         frag.style.color = Math.random() > 0.5 ? "pink" : "red";
         frag.style.fontSize = (Math.random() * 25 + 15) + "px";
 
-        const angle = i * (Math.PI / 6); // tạo vòng xoắn
+        const angle = i * (Math.PI / 6);
         const distance = radius + (i * 5);
         frag.style.setProperty("--dx", Math.cos(angle) * distance + "px");
         frag.style.setProperty("--dy", Math.sin(angle) * distance + "px");
@@ -227,6 +232,26 @@
         document.body.appendChild(frag);
         setTimeout(() => frag.remove(), 2200);
       }
+    }
+
+    // Trái tim to nhấp nháy rồi nổ
+    function bigHeartExplosion(callback) {
+      const heart = document.createElement("div");
+      heart.textContent = "❤️";
+      heart.style.position = "fixed";
+      heart.style.left = "50%";
+      heart.style.top = "50%";
+      heart.style.transform = "translate(-50%, -50%)";
+      heart.style.fontSize = "120px";
+      heart.style.zIndex = "20";
+      heart.style.animation = "blink 1s ease-in-out";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+        spiralExplode(window.innerWidth/2, window.innerHeight/2, 100, 200);
+        if (callback) callback();
+      }, 1000);
     }
 
     const displayText = document.getElementById("displayText");
@@ -257,15 +282,15 @@
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
-      displayText.textContent = text;
-      displayText.classList.add("show");
-      spiralExplode(window.innerWidth/2, window.innerHeight/2, 120, 400);
+
+      bigHeartExplosion(() => {
+        displayText.textContent = text;
+        displayText.classList.add("show");
+      });
 
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
       resetBtn.style.display = "inline-block";
-
-      setTimeout(() => resetBtn.style.display = "inline-block", 10000);
     });
 
     // Sao chép link
@@ -282,9 +307,10 @@
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
-      spiralExplode(window.innerWidth/2, window.innerHeight/2, 120, 400);
-      displayText.textContent = txt;
-      displayText.classList.add("show");
+      bigHeartExplosion(() => {
+        displayText.textContent = txt;
+        displayText.classList.add("show");
+      });
       inputBox.style.display = "none";
     }
   </script>
