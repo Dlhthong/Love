@@ -2,110 +2,136 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Love Explosion</title>
+  <title>Love Letter</title>
   <style>
     body {
       margin: 0;
       height: 100vh;
+      background: black;
+      overflow: hidden;
+      font-family: 'Times New Roman', serif;
+    }
+    .letterBox {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+    .letterBox img {
+      height: 85vh;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255,150,200,0.8);
+    }
+    #displayText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      text-align: center;
+      font-size: 42px;
+      font-weight: bold;
+      color: black;
+      white-space: pre-wrap;
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-shadow: 2px 2px 6px rgba(255,255,255,0.8),
+                   2px 2px 8px rgba(0,0,0,0.4);
+    }
+    #displayText.show { opacity: 1; }
+
+    .controls-left {
+      position: absolute;
+      left: 8%;
+      top: 70%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.8);
+      padding: 10px 15px;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #ffe6eb, #fff0f5);
-      overflow: hidden;
-      font-family: Arial, sans-serif;
+      gap: 6px;
+      z-index: 3;
     }
+    .controls-left input { padding: 6px; border-radius: 6px; width: 180px; }
+    .controls-left button { padding: 6px 12px; border: none; border-radius: 6px; background: pink; font-weight: bold; }
 
-    #inputBox {
+    .controls-right {
       position: absolute;
-      top: 20px;
+      right: 8%;
+      top: 70%;
+      transform: translateY(-50%);
       display: flex;
-      gap: 10px;
-      z-index: 10;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+      z-index: 3;
     }
-    #message {
-      padding: 8px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #ff6699;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      background: #ff3366;
-    }
+    #hint { background: rgba(255,255,255,0.7); padding: 5px 15px; border-radius: 8px; }
 
-    #displayText {
-      font-size: 36px;
-      font-weight: bold;
-      color: #222;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-      opacity: 0;
-      transition: opacity 1s;
-      z-index: 5;
+    .petal {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      animation: fall linear forwards;
+      pointer-events: none;
+      z-index: 1;
     }
-    #displayText.show {
-      opacity: 1;
-    }
-
-    .big-heart {
-      position: absolute;
-      font-size: 100px;
-      animation: blink 1.5s ease-in-out;
-      z-index: 20;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-    @keyframes blink {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
-    }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
     .fragment {
-      position: absolute;
+      position: fixed;
+      font-size: 24px;
       pointer-events: none;
-      animation: fly var(--dur) ease-out forwards;
+      animation: fly var(--dur) forwards;
+      z-index: 12;
     }
-    @keyframes fly {
-      from { transform: translate(0,0) scale(1); opacity: 1; }
-      to { transform: translate(var(--dx), var(--dy)) scale(0.8); opacity: 0; }
-    }
+    @keyframes fly { to { transform: translate(var(--dx), var(--dy)) scale(0.7) rotate(360deg); opacity: 0; } }
 
     .circleWave {
-      position: absolute;
-      border: 3px solid pink;
+      position: fixed;
+      border: 4px solid pink;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      left: 50%;
-      top: 50%;
+      width: 50px; height: 50px;
+      left: 50%; top: 50%;
       transform: translate(-50%, -50%) scale(0);
-      opacity: 0.7;
-      animation: wave 1s forwards;
-      z-index: 0;
+      opacity: 0.8;
+      animation: wave 1.2s forwards;
+      z-index: 5;
     }
-    @keyframes wave {
-      to { transform: translate(-50%, -50%) scale(6); opacity: 0; }
+    @keyframes wave { to { transform: translate(-50%, -50%) scale(8); opacity: 0; } }
+
+    .big-heart {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 140px;
+      z-index: 20;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.3); }
     }
   </style>
 </head>
 <body>
-  <div id="inputBox">
-    <input id="message" placeholder="Nhập chữ..." />
+  <div class="letterBox">
+    <img src="Love Letter.png" alt="Love Letter">
+    <div id="displayText"></div>
+  </div>
+
+  <div class="controls-left" id="inputBox">
+    <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
-    <button id="copyBtn" style="display:none;">Copy link</button>
+    <button id="copyBtn" style="display:none;">Sao chép link</button>
     <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
-  <div id="displayText"></div>
+  <div class="controls-right">
+    <div id="hint">Click chuột để pháo hoa 🎆</div>
+  </div>
 
   <script>
     const displayText = document.getElementById("displayText");
@@ -114,54 +140,69 @@
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
 
-    // Vụ nổ hình vòng tròn khi tim to nổ
-    function circleExplosion(x, y, count = 40) {
-      const circle = document.createElement("div");
-      circle.classList.add("circleWave");
-      document.body.appendChild(circle);
-      setTimeout(() => circle.remove(), 1000);
+    // Hoa rơi
+    function createPetal() {
+      const petal = document.createElement("div");
+      petal.classList.add("petal");
+      petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
+      petal.style.left = Math.random() * 100 + "vw";
+      petal.style.color = Math.random() > 0.5 ? "pink" : "red";
+      petal.style.fontSize = (Math.random() * 20 + 10) + "px";
+      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 10000);
+    }
+    setInterval(createPetal, 100);
+
+    // Nổ vòng tròn (tim to nổ)
+    function circleExplosion(x, y, count) {
+      const wave = document.createElement("div");
+      wave.classList.add("circleWave");
+      document.body.appendChild(wave);
+      setTimeout(() => wave.remove(), 1200);
 
       for (let i = 0; i < count; i++) {
-        const angle = (i / count) * (Math.PI * 2);
         const frag = document.createElement("div");
         frag.classList.add("fragment");
         frag.textContent = Math.random() > 0.5 ? "❀" : "❤️";
         frag.style.left = x + "px";
         frag.style.top = y + "px";
-        frag.style.fontSize = (Math.random() * 16 + 10) + "px";
-        const dx = Math.cos(angle) * (150 + Math.random() * 100);
-        const dy = Math.sin(angle) * (150 + Math.random() * 100);
-        frag.style.setProperty("--dx", dx + "px");
-        frag.style.setProperty("--dy", dy + "px");
-        frag.style.setProperty("--dur", (1 + Math.random()) + "s");
+        frag.style.color = Math.random() > 0.5 ? "pink" : "red";
+        frag.style.fontSize = (Math.random() * 25 + 20) + "px";
+        const angle = (i / count) * (Math.PI * 2);
+        const dist = 200 + Math.random() * 100;
+        frag.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+        frag.style.setProperty("--dy", Math.sin(angle) * dist + "px");
+        frag.style.setProperty("--dur", "1.8s");
         document.body.appendChild(frag);
         setTimeout(() => frag.remove(), 2000);
       }
     }
 
-    // Vụ nổ pháo hoa khi click
+    // Pháo hoa tia khi click
     function fireworkExplode(x, y, rays = 12, length = 250) {
       for (let i = 0; i < rays; i++) {
         const angle = (i / rays) * (Math.PI * 2);
-        const count = 6 + Math.floor(Math.random() * 5);
+        const count = 6;
         for (let j = 1; j <= count; j++) {
           const frag = document.createElement("div");
           frag.classList.add("fragment");
           frag.textContent = Math.random() > 0.5 ? "❀" : "❤️";
           frag.style.left = x + "px";
           frag.style.top = y + "px";
-          frag.style.fontSize = (Math.random() * 16 + 10) + "px";
+          frag.style.color = Math.random() > 0.5 ? "pink" : "red";
+          frag.style.fontSize = (Math.random() * 18 + 12) + "px";
           const dist = (length / count) * j;
           frag.style.setProperty("--dx", Math.cos(angle) * dist + "px");
           frag.style.setProperty("--dy", Math.sin(angle) * dist + "px");
           frag.style.setProperty("--dur", (1 + Math.random()*0.5) + "s");
           document.body.appendChild(frag);
-          setTimeout(() => frag.remove(), 2000);
+          setTimeout(() => frag.remove(), 1800);
         }
       }
     }
 
-    // Tim to nhấp nháy rồi nổ
+    // Tim to nổ
     function bigHeartExplosion() {
       const heart = document.createElement("div");
       heart.classList.add("big-heart");
@@ -170,13 +211,19 @@
 
       setTimeout(() => {
         heart.remove();
-        circleExplosion(window.innerWidth / 2, window.innerHeight / 2, 60);
-        // chữ xuất hiện sau khi tim nổ
-        displayText.classList.add("show");
+        circleExplosion(window.innerWidth / 2, window.innerHeight / 2, 40);
+        displayText.classList.add("show"); // hiện chữ sau khi tim nổ
       }, 1500);
     }
 
-    // Bắt đầu
+    // Click = pháo hoa
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#inputBox")) return;
+      document.getElementById("hint").style.display = "none";
+      fireworkExplode(e.clientX, e.clientY, 12, 250);
+    });
+
+    // Start
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
@@ -189,15 +236,15 @@
 
     // Copy link
     copyBtn.addEventListener("click", () => {
-      const txt = displayText.textContent;
-      const url = `${window.location.origin}${window.location.pathname}?text=${encodeURIComponent(txt)}`;
-      navigator.clipboard.writeText(url).then(() => alert("Đã copy link!"));
+      const text = encodeURIComponent(document.getElementById("message").value.trim());
+      const url = window.location.origin + window.location.pathname + "?text=" + text;
+      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
     // Reset
-    resetBtn.addEventListener("click", () => window.location.href = window.location.pathname);
+    resetBtn.addEventListener("click", () => location.reload());
 
-    // Tự động load text từ link
+    // Auto từ link
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
@@ -205,13 +252,6 @@
       bigHeartExplosion();
       inputBox.style.display = "none";
     }
-
-    // Click tạo pháo hoa
-    document.addEventListener("click", (e) => {
-      if (!["INPUT", "BUTTON", "TEXTAREA"].includes(e.target.tagName)) {
-        fireworkExplode(e.clientX, e.clientY, 12 + Math.floor(Math.random()*5));
-      }
-    });
   </script>
 </body>
 </html>
