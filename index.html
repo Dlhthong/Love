@@ -314,8 +314,10 @@
     window.addEventListener("load", () => {
       const bigHeart = document.getElementById("bigHeart");
       bigHeart.addEventListener("animationend", () => {
-        grandExplosion(window.innerWidth/2, window.innerHeight/2);
         bigHeart.classList.add("fadeOut");
+        setTimeout(() => {
+          grandExplosion(window.innerWidth/2, window.innerHeight/2);
+        }, 150); // nổ khi tim đang mờ dần
         setTimeout(() => bigHeart.remove(), 800);
       });
     });
