@@ -160,7 +160,6 @@
     }
     setInterval(createPetal, 80);
 
-    /* ⭐ Sao băng lớn hơn */
     function createStar() {
       const star = document.createElement("div");
       star.classList.add("star");
@@ -183,10 +182,8 @@
     }
 
     function playMusic() {
-      const audio = document.getElementById("bgm");
       if (audio.muted) audio.muted = false;
       audio.play().catch(()=>{});
-    });
     }
 
     startBtn.addEventListener("click", () => {
