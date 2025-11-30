@@ -109,20 +109,26 @@
       to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
+    /* ⭐ Sao băng lớn và hình ngôi sao */
     .star {
       position: fixed;
       top: -20px;
-      width: 12px;
-      height: 12px;
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 0 20px white;
+      width: 20px;
+      height: 20px;
+      background: gold;
+      clip-path: polygon(
+        50% 0%, 61% 35%, 98% 35%, 
+        68% 57%, 79% 91%, 50% 70%, 
+        21% 91%, 32% 57%, 2% 35%, 
+        39% 35%
+      );
       animation: shoot 1.4s linear forwards;
       z-index: 5;
+      box-shadow: 0 0 15px gold;
     }
     @keyframes shoot {
-      0% { transform: translate(0,0) scale(1.2); opacity:1; }
-      100% { transform: translate(450px, 900px) scale(0.4); opacity:0; }
+      0% { transform: translate(0,0) scale(1.5); opacity:1; }
+      100% { transform: translate(450px, 900px) scale(0.5); opacity:0; }
     }
   </style>
 </head>
@@ -214,7 +220,7 @@
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
 
-      // Bản link vẫn có nút nhạc để người nhận bật
+      // Bản link vẫn có nút nhạc
       musicBtn.style.display = "inline-block";
     }
   </script>
