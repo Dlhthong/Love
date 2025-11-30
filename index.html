@@ -219,6 +219,7 @@
 
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
+      
       const txt = decodeURIComponent(params.get("text"));
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
