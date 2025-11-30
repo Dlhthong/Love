@@ -127,8 +127,6 @@
       0% { transform: translate(0,0) scale(1); opacity:1; }
       100% { transform: translate(600px, 900px) scale(0.6); opacity:0; }
     }
-      100% { transform: translate(400px, 800px) scale(0.2); opacity:0; }
-    }
   </style>
 </head>
 <body>
@@ -162,13 +160,12 @@
     }
     setInterval(createPetal, 80);
 
-    /* ⭐ Tạo sao băng */
     function createStar() {
       const star = document.createElement("div");
       star.classList.add("star");
       star.style.left = Math.random() * 80 + "vw";
       document.body.appendChild(star);
-      setTimeout(() => star.remove(), 1500);
+      setTimeout(() => star.remove(), 1800);
     }
     setInterval(createStar, 2000);
 
@@ -185,8 +182,7 @@
     }
 
     function playMusic() {
-      audio.volume = 1;
-      audio.play().catch(()=>{ audio.muted=false; audio.play(); });().catch(()=>{});
+      audio.play().catch(()=>{ audio.muted=false; audio.play(); });
     }
 
     startBtn.addEventListener("click", () => {
@@ -212,7 +208,6 @@
       const txt = decodeURIComponent(params.get("text"));
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
-
       if (params.get("auto") === "1") {
         playMusic();
       }
