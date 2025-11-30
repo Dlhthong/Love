@@ -2,31 +2,27 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Love Letter — Romantic Edition</title>
+  <title>Love Letter</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      margin: 0;
       height: 100vh;
       background: black;
       overflow: hidden;
       font-family: 'Times New Roman', serif;
     }
-
-    /* Soft vignette + pink glow background */
     body::before, body::after {
       content: "";
       position: absolute;
       top: 0;
       width: 50%;
       height: 100%;
-      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") center/cover no-repeat;
+      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
       z-index: 0;
-      filter: brightness(0.55) blur(2px);
     }
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    /* Letter box */
     .letterBox {
       position: absolute;
       top: 50%;
@@ -35,138 +31,84 @@
       z-index: 2;
     }
     .letterBox img {
-      height: 84vh;
-      border-radius: 16px;
-      box-shadow: 0 0 50px rgba(255,120,160,0.8);
-      filter: drop-shadow(0 0 25px rgba(255,100,150,0.5));
-      animation: float 4s ease-in-out infinite;
+      height: 85vh;
+      width: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255,150,200,0.8);
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    /* Romantic text */
     #displayText {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       width: 70%;
       text-align: center;
-      font-size: 44px;
-      color: black;
+      font-size: 42px;
       font-weight: bold;
+      color: black;
+      white-space: pre-wrap;
       opacity: 0;
-      letter-spacing: 1.5px;
-      transition: opacity 1.6s ease;
+      transition: opacity 1s ease;
       text-shadow:
-        0 0 15px rgba(255,200,220,0.9),
-        0 0 40px rgba(255,150,180,0.7);
+        2px 2px 6px rgba(255,255,255,0.8),
+        2px 2px 8px rgba(0,0,0,0.4);
     }
     #displayText.show { opacity: 1; }
 
-    /* Input + buttons */
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    .typing {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      animation: typing 3s steps(40) forwards;
+    }
+
     .controls-left {
       position: absolute;
       left: 8%;
-      top: 68%;
+      top: 70%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.9);
-      padding: 14px 18px;
-      border-radius: 12px;
+      background: rgba(255,255,255,0.8);
+      padding: 10px 15px;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       z-index: 3;
-      box-shadow: 0 0 15px rgba(255,150,180,0.6);
-      backdrop-filter: blur(4px);
     }
     .controls-left input {
-      padding: 8px;
-      font-size: 17px;
+      padding: 6px;
       border-radius: 6px;
       border: 1px solid gray;
-      width: 190px;
       text-align: center;
+      font-size: 16px;
+      width: 180px;
     }
     .controls-left button {
-      padding: 7px 14px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
       background: pink;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
       font-weight: bold;
-      transition: 0.2s;
     }
-    .controls-left button:hover {
-      background: rgb(255,180,200);
-      transform: scale(1.05);
-    }
+    #playBtn { display:none; }
+    #hint { display:none; }
 
-    /* Right controls */
-    .controls-right {
-      position: absolute;
-      right: 8%; top: 68%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      z-index: 3;
-    }
-    #playBtn {
-      padding: 9px 18px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      background: white;
-      font-weight: bold;
-      transition: 0.25s;
-    }
-    #playBtn:hover { transform: scale(1.07); }
-
-    /* Hint */
-    #hint {
-      font-size: 18px;
-      font-weight: bold;
-      background: rgba(255,255,255,0.75);
-      padding: 6px 16px;
-      border-radius: 10px;
-    }
-
-    /* Falling petals */
     .petal {
       position: fixed;
       top: -10px;
       font-size: 24px;
       animation: fall linear forwards;
+      user-select: none;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.9;
-      filter: drop-shadow(0 0 4px pink);
     }
     @keyframes fall {
       to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
-
-    /* Heart burst */
-    @keyframes blink {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-      50% { transform: translate(-50%, -50%) scale(1.35); opacity: 0.6; }
-    }
-
-    /* Wave rings */
-    .wave {
-      position: fixed;
-      left: 50%; top: 50%;
-      width: 30px; height: 30px;
-      border: 3px solid rgba(255,130,170,0.6);
-      border-radius: 50%;
-      transform: translate(-50%, -50%) scale(0.2);
-      animation: waveExpand 2.2s ease-out forwards;
-      z-index: 10;
-    }
-    @keyframes waveExpand {
-      to { transform: translate(-50%, -50%) scale(6); opacity: 0; }
     }
   </style>
 </head>
@@ -183,157 +125,66 @@
     <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
-  <div class="controls-right">
-    <button id="playBtn">Bật nhạc 🎵</button>
-    <div id="hint">Click để tạo pháo hoa ❤️</div>
-  </div>
-
   <audio id="bgm" loop muted>
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    /* Falling petals */
     function createPetal() {
-      const p = document.createElement("div");
-      p.classList.add("petal");
-      p.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
-      p.style.left = Math.random() * 100 + "vw";
-      p.style.fontSize = (Math.random() * 20 + 12) + "px";
-      p.style.color = Math.random() > 0.5 ? "pink" : "#ff7aa8";
-      p.style.animationDuration = (Math.random() * 5 + 6) + "s";
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 12000);
+      const petal = document.createElement("div");
+      petal.classList.add("petal");
+      petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
+      petal.style.left = Math.random() * 100 + "vw";
+      petal.style.color = Math.random() > 0.5 ? "pink" : "red";
+      petal.style.fontSize = (Math.random() * 20 + 10) + "px";
+      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 10000);
     }
-    setInterval(createPetal, 85);
+    setInterval(createPetal, 80);
 
-    /* Heart explosion intro */
-    function bigHeart() {
-      const h = document.createElement("div");
-      h.textContent = "❤️";
-      h.style.position = "fixed";
-      h.style.left = "50%";
-      h.style.top = "50%";
-      h.style.transform = "translate(-50%, -50%)";
-      h.style.fontSize = "190px";
-      h.style.animation = "blink 1.6s ease-in-out";
-      h.style.zIndex = 20;
-      document.body.appendChild(h);
-
-      setTimeout(() => {
-        h.remove();
-        burstEmoji();
-        ringWaves();
-        displayText.classList.add("show");
-      }, 1600);
-    }
-
-    /* Burst emoji */
-    function burstEmoji() {
-      for (let i = 0; i < 160; i++) {
-        const f = document.createElement("div");
-        f.textContent = Math.random() > 0.5 ? "❀" : "❤️";
-        f.classList.add("fragment");
-        f.style.position = "fixed";
-        f.style.left = innerWidth/2 + "px";
-        f.style.top = innerHeight/2 + "px";
-        f.style.fontSize = (Math.random()*30+20)+"px";
-        f.style.color = Math.random()>0.5?"pink":"#ff7aa8";
-        const angle = Math.random()*Math.PI*2;
-        const dist = 330 + Math.random()*200;
-        f.animate({
-          transform: [`translate(0,0)`, `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`],
-          opacity: [1,0]
-        }, { duration: 2200, easing:"ease-out" });
-        document.body.appendChild(f);
-        setTimeout(()=>f.remove(), 2200);
-      }
-    }
-
-    /* Waves (3 rings) */
-    function ringWaves() {
-      for (let i=0;i<3;i++) setTimeout(()=>{
-        const w = document.createElement("div");
-        w.classList.add("wave");
-        document.body.appendChild(w);
-        setTimeout(()=>w.remove(),2000);
-      }, i*500);
-    }
-
-    /* Firework on click */
-    document.addEventListener("click", e => {
-      if (e.target.closest("#inputBox") || e.target.id==="playBtn") return;
-      document.getElementById("hint").style.display = "none";
-      createFirework(e.clientX, e.clientY);
-    });
-
-    function createFirework(x,y) {
-      const rays = 12;
-      for (let i=0;i<rays;i++){
-        const angle = (i/rays)*(Math.PI*2);
-        for (let j=1;j<=7;j++){
-          const f=document.createElement("div");
-          f.textContent=Math.random()>0.5?"❀":"❤️";
-          f.style.position="fixed";
-          f.style.left=x+"px";
-          f.style.top=y+"px";
-          f.style.fontSize=(Math.random()*22+16)+"px";
-          const dist=40*j;
-          f.animate({ transform:["translate(0,0)",`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`], opacity:[1,0]},{duration:1200,easing:"ease-out"});
-          document.body.appendChild(f);
-          setTimeout(()=>f.remove(),1200);
-        }
-      }
-    }
-
-    /* Music auto play when link opened */
-    const audio = document.getElementById("bgm");
-    const playBtn = document.getElementById("playBtn");
-    playBtn.addEventListener("click",()=>{
-      audio.muted=false;
-      audio.play();
-      playBtn.style.display="none";
-    });
-
-    function autoPlayMusic() {
-      audio.muted = false;
-      audio.play().then(()=>{
-        playBtn.style.display = "none";
-      }).catch(()=>{});
-    }
-
-    /* Text handling */
     const displayText = document.getElementById("displayText");
     const startBtn = document.getElementById("startBtn");
     const copyBtn = document.getElementById("copyBtn");
     const resetBtn = document.getElementById("resetBtn");
     const inputBox = document.getElementById("inputBox");
+    const audio = document.getElementById("bgm");
 
-    startBtn.addEventListener("click",()=>{
+    function typeAnimation(text) {
+      displayText.innerHTML = `<span class='typing'>${text}</span>`;
+      displayText.classList.add("show");
+    }
+
+    function playMusic() {
+      audio.muted = false;
+      audio.play();
+    }
+
+    startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
-      if(!text) return alert("Vui lòng nhập chữ!");
-      displayText.textContent = text;
-      bigHeart();
-      startBtn.style.display="none";
-      copyBtn.style.display="inline-block";
-      resetBtn.style.display="inline-block";
+      if (!text) return alert("Vui lòng nhập chữ!");
+      typeAnimation(text);
+      playMusic();
+      startBtn.style.display = "none";
+      copyBtn.style.display = "inline-block";
+      resetBtn.style.display = "inline-block";
     });
 
-    copyBtn.addEventListener("click",()=>{
+    copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
-      const url = window.location.origin + window.location.pathname + "?text=" + text + "&autoplay=1";
-      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link ♥"));
+      const url = window.location.origin + window.location.pathname + `?text=${text}`;
+      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
-    resetBtn.addEventListener("click",()=>location.reload());
+    resetBtn.addEventListener("click", () => location.reload());
 
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
-      displayText.textContent = decodeURIComponent(params.get("text"));
+      const txt = decodeURIComponent(params.get("text"));
+      playMusic();
       inputBox.style.display = "none";
-      bigHeart();
-      if (params.get("autoplay") == "1") autoPlayMusic();
+      setTimeout(() => typeAnimation(txt), 500);
     }
   </script>
 </body>
-</
+</html>
