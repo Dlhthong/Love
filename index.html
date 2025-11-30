@@ -108,7 +108,9 @@
       z-index: 1;
     }
     @keyframes fall {
-      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-40vw, 110vh) rotate(360deg); opacity: 0; }
+    }
     }
   </style>
 </head>
@@ -125,9 +127,9 @@
     <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
-  <audio id="bgm" loop muted>
+  <audio id="bgm" autoplay loop>
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
-  </audio>
+</audio>
 
   <script>
     function createPetal() {
@@ -136,7 +138,7 @@
       petal.innerHTML = Math.random() > 0.5 ? "🌸" : "❤️";
       petal.style.left = Math.random() * 100 + "vw";
       petal.style.color = Math.random() > 0.5 ? "pink" : "red";
-      petal.style.fontSize = (Math.random() * 28 + 18) + "px";
+      petal.style.fontSize = (Math.random() * 40 + 25) + "px";
       petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
       document.body.appendChild(petal);
       setTimeout(() => petal.remove(), 10000);
@@ -185,6 +187,38 @@
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
     }
+    // Sao băng
+    function createShootingStar() {
+      const star = document.createElement("div");
+      star.textContent = "✨";
+      star.style.position = "fixed";
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = "-5vh";
+      star.style.fontSize = "28px";
+      star.style.zIndex = 20;
+      star.style.opacity = 0.9;
+      star.style.transition = "transform 1.2s linear, opacity 1.2s";
+
+      document.body.appendChild(star);
+
+      setTimeout(() => {
+        star.style.transform = "translate(40vw, 80vh) rotate(45deg)";
+        star.style.opacity = 0;
+      }, 50);
+
+      setTimeout(() => star.remove(), 1500);
+    }
+
+    // Random sao băng mỗi 6–12 giây
+    setInterval(() => {
+      if (Math.random() > 0.5) createShootingStar();
+    }, 6000 + Math.random() * 6000);
   </script>
+<script>
+  const audio = document.getElementById('bgm');
+  function tryPlay(){ audio.play().catch(()=>{}); }
+  window.addEventListener('load', tryPlay);
+  document.addEventListener('click', tryPlay, { once:true });
+</script>
 </body>
 </html>
