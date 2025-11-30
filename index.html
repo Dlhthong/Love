@@ -132,13 +132,13 @@
 </audio>
 
   <script>
-    function createPetal() {
+    functioal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
       petal.innerHTML = Math.random() > 0.5 ? "🌸" : "❤️";
       petal.style.left = Math.random() * 100 + "vw";
       petal.style.color = Math.random() > 0.5 ? "pink" : "red";
-      petal.style.fontSize = (Math.random() * 40 + 25) + "px";
+    ";
       petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
       document.body.appendChild(petal);
       setTimeout(() => petal.remove(), 10000);
@@ -189,8 +189,15 @@
     }
     // Sao băng
     function createShootingStar() {
-      const star = document.createElement("div");
-      star.textContent = "✨";
+      const star = document.createElement("dfunction createShootingStar() {
+  const star = document.createElement('div');
+  star.classList.add('shooting-star');
+  star.style.left = Math.random() * 100 + 'vw';
+  star.style.top = Math.random() * 30 + 'vh';
+  star.style.animationDuration = (Math.random()*1 + 0.8) + 's';
+  document.body.appendChild(star);
+  setTimeout(()=>{ star.remove(); }, 2000);
+}extContent = "✨";
       star.style.position = "fixed";
       star.style.left = Math.random() * 100 + "vw";
       star.style.top = "-5vh";
@@ -209,14 +216,15 @@
       setTimeout(() => star.remove(), 1500);
     }
 
-    // Random sao băng mỗi 6–12 giây
+    // Random saây
     setInterval(() => {
       if (Math.random() > 0.5) createShootingStar();
     }, 6000 + Math.random() * 6000);
   </script>
 <script>
   const audio = document.getElementById('bgm');
-  function tryPlay(){ audio.play().catch(()=>{}); }
+  function tryPlaysetInterval(createShootingStar, 1200);
+</script>.play().catch(()=>{}); }
   window.addEventListener('load', tryPlay);
   document.addEventListener('click', tryPlay, { once:true });
 </script>
