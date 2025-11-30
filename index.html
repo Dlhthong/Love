@@ -4,113 +4,51 @@
   <meta charset="UTF-8">
   <title>Love Letter</title>
   <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: black;
-      overflow: hidden;
-      font-family: 'Times New Roman', serif;
-    }
+    body { margin: 0; height: 100vh; background: black; overflow: hidden; font-family: 'Times New Roman', serif; }
     body::before, body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
-      z-index: 0;
+      content: ""; position: absolute; top: 0; width: 50%; height: 100%;
+      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover; z-index: 0;
     }
     body::after { right: 0; transform: scaleX(-1); }
     body::before { left: 0; }
 
-    .letterBox {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-    }
-    .letterBox img {
-      height: 85vh;
-      width: auto;
-      border-radius: 12px;
-      box-shadow: 0 0 40px rgba(255,150,200,0.8);
-    }
+    .letterBox { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; }
+    .letterBox img { height: 85vh; border-radius: 12px; box-shadow: 0 0 40px rgba(255,150,200,0.8); }
+
     #displayText {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
-      text-align: center;
-      font-size: 42px;
-      font-weight: bold;
-      color: black;
-      white-space: pre-wrap;
-      opacity: 0;
-      transition: opacity 1s ease;
-      text-shadow:
-        2px 2px 6px rgba(255,255,255,0.8),
-        2px 2px 8px rgba(0,0,0,0.4);
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 70%; text-align: center; font-size: 42px; font-weight: bold; color: black;
+      white-space: pre-wrap; opacity: 0; transition: opacity 1s ease;
+      text-shadow: 2px 2px 6px rgba(255,255,255,0.8), 2px 2px 8px rgba(0,0,0,0.4);
     }
     #displayText.show { opacity: 1; }
 
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    .typing {
-      display: inline-block;
-      overflow: hidden;
-      white-space: nowrap;
-      animation: typing 3s steps(40) forwards;
-    }
+    .typing { display: inline-block; overflow: hidden; white-space: nowrap; animation: typing 3s steps(40) forwards; }
+    @keyframes typing { from { width: 0; } to { width: 100%; } }
 
-    .controls-left {
-      position: absolute;
-      left: 8%;
-      top: 70%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
-      padding: 10px 15px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 3;
-    }
-    .controls-left input {
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid gray;
-      text-align: center;
-      font-size: 16px;
-      width: 180px;
-    }
-    .controls-left button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: pink;
-      font-weight: bold;
-    }
-    #playBtn { display:none; }
-    #hint { display:none; }
+    .controls-left { position: absolute; left: 8%; top: 70%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.8); padding: 10px 15px; border-radius: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 3; }
+    .controls-left input { padding: 6px; border-radius: 6px; border: 1px solid gray; text-align: center; font-size: 16px; width: 180px; }
+    .controls-left button { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: pink; font-weight: bold; }
 
-    .petal {
+    /* Petal */
+    .petal { position: fixed; top: -10px; font-size: 20px; animation: fall linear forwards; user-select: none; pointer-events: none; z-index: 1; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+    /* Shooting Star */
+    .shooting-star {
       position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: fall linear forwards;
-      user-select: none;
-      pointer-events: none;
-      z-index: 1;
+      width: 4px; height: 4px;
+      background: white;
+      box-shadow: 0 0 10px white;
+      border-radius: 50%;
+      transform: rotate(-40deg);
+      animation: shoot 1s linear forwards;
+      z-index: 5;
     }
-    @keyframes fall {
-      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-      100% { transform: translate(-40vw, 110vh) rotate(360deg); opacity: 0; }
-    }
+    @keyframes shoot {
+      from { transform: translateX(0) translateY(0) rotate(-40deg); opacity: 1; }
+      to { transform: translateX(-300px) translateY(200px) rotate(-40deg); opacity: 0; }
     }
   </style>
 </head>
@@ -129,21 +67,34 @@
 
   <audio id="bgm" autoplay loop>
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
-</audio>
+  </audio>
 
   <script>
-    functioal() {
-      const petal = document.createElement("div");
-      petal.classList.add("petal");
-      petal.innerHTML = Math.random() > 0.5 ? "🌸" : "❤️";
-      petal.style.left = Math.random() * 100 + "vw";
-      petal.style.color = Math.random() > 0.5 ? "pink" : "red";
-    ";
-      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+    /* Petal Falling */
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      petal.innerText = Math.random() > 0.5 ? '❀' : '❤️';
+      petal.style.left = Math.random() * 100 + 'vw';
+      petal.style.fontSize = (Math.random() * 12 + 10) + 'px';
+      petal.style.opacity = Math.random() * 0.8 + 0.2;
+      petal.style.animationDuration = (Math.random() * 5 + 5) + 's';
       document.body.appendChild(petal);
       setTimeout(() => petal.remove(), 10000);
     }
     setInterval(createPetal, 80);
+
+    /* Shooting Star */
+    function createShootingStar() {
+      const star = document.createElement('div');
+      star.classList.add('shooting-star');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 40 + 'vh';
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 1200);
+    }
+    setInterval(createShootingStar, 1500);
+
 
     const displayText = document.getElementById("displayText");
     const startBtn = document.getElementById("startBtn");
@@ -157,20 +108,27 @@
       displayText.classList.add("show");
     }
 
-    function playMusic() {
+    /* FORCE AUTOPLAY MUSIC */
+    function forcePlay() {
       audio.muted = false;
-      audio.play();
+      audio.volume = 1;
+      audio.play().catch(() => {});
     }
+
+    window.addEventListener("load", forcePlay);
+    document.addEventListener("click", forcePlay, { once: true });
+
 
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
       typeAnimation(text);
-      playMusic();
+      forcePlay();
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
       resetBtn.style.display = "inline-block";
     });
+
 
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
@@ -178,55 +136,17 @@
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
+
     resetBtn.addEventListener("click", () => location.reload());
+
 
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
-      playMusic();
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
+      forcePlay();
     }
-    // Sao băng
-    function createShootingStar() {
-      const star = document.createElement("dfunction createShootingStar() {
-  const star = document.createElement('div');
-  star.classList.add('shooting-star');
-  star.style.left = Math.random() * 100 + 'vw';
-  star.style.top = Math.random() * 30 + 'vh';
-  star.style.animationDuration = (Math.random()*1 + 0.8) + 's';
-  document.body.appendChild(star);
-  setTimeout(()=>{ star.remove(); }, 2000);
-}extContent = "✨";
-      star.style.position = "fixed";
-      star.style.left = Math.random() * 100 + "vw";
-      star.style.top = "-5vh";
-      star.style.fontSize = "28px";
-      star.style.zIndex = 20;
-      star.style.opacity = 0.9;
-      star.style.transition = "transform 1.2s linear, opacity 1.2s";
-
-      document.body.appendChild(star);
-
-      setTimeout(() => {
-        star.style.transform = "translate(40vw, 80vh) rotate(45deg)";
-        star.style.opacity = 0;
-      }, 50);
-
-      setTimeout(() => star.remove(), 1500);
-    }
-
-    // Random saây
-    setInterval(() => {
-      if (Math.random() > 0.5) createShootingStar();
-    }, 6000 + Math.random() * 6000);
   </script>
-<script>
-  const audio = document.getElementById('bgm');
-  function tryPlaysetInterval(createShootingStar, 1200);
-</script>.play().catch(()=>{}); }
-  window.addEventListener('load', tryPlay);
-  document.addEventListener('click', tryPlay, { once:true });
-</script>
 </body>
 </html>
