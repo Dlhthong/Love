@@ -133,10 +133,10 @@
     function createPetal() {
       const petal = document.createElement("div");
       petal.classList.add("petal");
-      petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
+      petal.innerHTML = Math.random() > 0.5 ? "🌸" : "❤️";
       petal.style.left = Math.random() * 100 + "vw";
       petal.style.color = Math.random() > 0.5 ? "pink" : "red";
-      petal.style.fontSize = (Math.random() * 20 + 10) + "px";
+      petal.style.fontSize = (Math.random() * 28 + 18) + "px";
       petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
       document.body.appendChild(petal);
       setTimeout(() => petal.remove(), 10000);
