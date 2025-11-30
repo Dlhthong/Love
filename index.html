@@ -140,6 +140,7 @@
     <button id="startBtn">Bắt đầu</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
     <button id="resetBtn" style="display:none;">Reset</button>
+    <button id="musicBtn">🔊 Nhạc</button>
   </div>
 
   <audio id="bgm" loop autoplay muted>
@@ -173,6 +174,7 @@
     const startBtn = document.getElementById("startBtn");
     const copyBtn = document.getElementById("copyBtn");
     const resetBtn = document.getElementById("resetBtn");
+    const musicBtn = document.getElementById("musicBtn");
     const inputBox = document.getElementById("inputBox");
     const audio = document.getElementById("bgm");
 
@@ -200,6 +202,17 @@
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + `?text=${text}&auto=1`;
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
+    });
+
+    musicBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.muted = false;
+        audio.play();
+        musicBtn.textContent = "🔊 Đang phát";
+      } else {
+        audio.pause();
+        musicBtn.textContent = "🔈 Tắt nhạc";
+      }
     });
 
     resetBtn.addEventListener("click", () => location.reload());
