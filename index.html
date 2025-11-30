@@ -142,7 +142,7 @@
     <button id="resetBtn" style="display:none;">Reset</button>
   </div>
 
-  <audio id="bgm" loop autoplay>
+  <audio id="bgm" loop autoplay muted>
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
@@ -183,8 +183,10 @@
     }
 
     function playMusic() {
-      audio.volume = 1;
+      const audio = document.getElementById("bgm");
+      if (audio.muted) audio.muted = false;
       audio.play().catch(()=>{});
+    });
     }
 
     startBtn.addEventListener("click", () => {
@@ -210,8 +212,7 @@
       const txt = decodeURIComponent(params.get("text"));
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
-
-      playMusic();
+      setTimeout(() => playMusic(), 300);
     }
   </script>
 </body>
