@@ -95,8 +95,6 @@
       background: pink;
       font-weight: bold;
     }
-    #playBtn { display:none; }
-    #hint { display:none; }
 
     .petal {
       position: fixed;
@@ -111,7 +109,6 @@
       to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
-    /* ⭐ Sao băng lớn hơn */
     .star {
       position: fixed;
       top: -20px;
@@ -135,17 +132,16 @@
     <div id="displayText"></div>
   </div>
 
-  
-
   <div class="controls-left" id="inputBox">
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
     <button id="resetBtn" style="display:none;">Reset</button>
-    <button id="musicBtn">🔊 Nhạc</button>
   </div>
 
-  <audio id="bgm" loop autoplay muted>
+  <button id="musicBtn" style="position:absolute; top:20px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:pink; font-weight:bold; cursor:pointer;">🔊 Nhạc</button>
+
+  <audio id="bgm" loop>
     <source src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
@@ -180,31 +176,15 @@
     const inputBox = document.getElementById("inputBox");
     const audio = document.getElementById("bgm");
 
-    // ⭐ Tự động bật nhạc cho cả bản gốc và bản sao chép
-    function autoPlayMusic() {
-      audio.volume = 1;
-      audio.play().catch(()=>{});
-    }
-
-    window.addEventListener("load", () => {
-      setTimeout(autoPlayMusic, 300);
-    });
-
     function typeAnimation(text) {
       displayText.innerHTML = `<span class='typing'>${text}</span>`;
       displayText.classList.add("show");
-    }
-
-    function playMusic() {
-      if (audio.muted) audio.muted = false;
-      audio.play().catch(()=>{});
     }
 
     startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
       if (!text) return alert("Vui lòng nhập chữ!");
       typeAnimation(text);
-      playMusic();
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
       resetBtn.style.display = "inline-block";
@@ -212,14 +192,15 @@
 
     copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
-      const url = window.location.origin + window.location.pathname + `?text=${text}&auto=1`;
+      const url = window.location.origin + window.location.pathname + `?text=${text}`;
       navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
+    resetBtn.addEventListener("click", () => location.reload());
+
     musicBtn.addEventListener("click", () => {
       if (audio.paused) {
-        audio.muted = false;
-        audio.play();
+        audio.play().catch(()=>{});
         musicBtn.textContent = "🔊 Đang phát";
       } else {
         audio.pause();
@@ -227,34 +208,15 @@
       }
     });
 
-    resetBtn.addEventListener("click", () => location.reload());
-
     const params = new URLSearchParams(window.location.search);
     if (params.has("text")) {
-      
       const txt = decodeURIComponent(params.get("text"));
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
-      setTimeout(() => playMusic(), 300);
-    }
-  </script>
-  <script>
-    // Tự động bật nhạc khi mở link, vẫn giữ nút bật/tắt cho cả 2 bản
-    const audio = document.getElementById("bgm");
-    const musicBtn = document.getElementById("musicToggle");
 
-    function autoPlayMusic() {
-      audio.volume = 1;
-      audio.play().catch(()=>{});
+      // Bản link vẫn có nút nhạc để người nhận bật
+      musicBtn.style.display = "inline-block";
     }
-
-    // Nếu có ?text= thì tự bật nhạc luôn
-    const params2 = new URLSearchParams(window.location.search);
-    if (params2.has("text")) {
-      setTimeout(autoPlayMusic, 300);
-    }
-
-    
   </script>
 </body>
 </html>
