@@ -135,7 +135,7 @@
     <div id="displayText"></div>
   </div>
 
-  <button id="musicToggle" style="position:absolute; right:20px; top:20px; padding:10px 16px; background:white; border-radius:8px; border:none; font-weight:bold; z-index:10; cursor:pointer;">Tắt nhạc</button>
+  
 
   <div class="controls-left" id="inputBox">
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
@@ -179,6 +179,16 @@
     const musicBtn = document.getElementById("musicBtn");
     const inputBox = document.getElementById("inputBox");
     const audio = document.getElementById("bgm");
+
+    // ⭐ Tự động bật nhạc cho cả bản gốc và bản sao chép
+    function autoPlayMusic() {
+      audio.volume = 1;
+      audio.play().catch(()=>{});
+    }
+
+    window.addEventListener("load", () => {
+      setTimeout(autoPlayMusic, 300);
+    });
 
     function typeAnimation(text) {
       displayText.innerHTML = `<span class='typing'>${text}</span>`;
@@ -244,16 +254,7 @@
       setTimeout(autoPlayMusic, 300);
     }
 
-    // Nút bật/tắt nhạc
-    musicBtn.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.play();
-        musicBtn.innerText = "Tắt nhạc";
-      } else {
-        audio.pause();
-        musicBtn.innerText = "Mở nhạc";
-      }
-    });
+    
   </script>
 </body>
 </html>
