@@ -346,6 +346,38 @@ if (params.get("mode") === "christmas") {
         letterImg.style.boxShadow = "0 0 40px rgba(255,150,200,0.8)";
       }
     });
+/* === Snow Effect (chỉ bật khi isChristmas = true) === */
+function createSnow() {
+  if (!isChristmas) return; // mode thường không rơi tuyết
+
+  const snow = document.createElement("div");
+  snow.classList.add("snow");
+  snow.textContent = "❄";
+
+  snow.style.position = "fixed";
+  snow.style.left = Math.random() * 100 + "vw";
+  snow.style.top = "-20px";
+  snow.style.fontSize = (Math.random() * 12 + 12) + "px";
+  snow.style.opacity = Math.random();
+  snow.style.animation = `snowFall ${5 + Math.random() * 5}s linear forwards`;
+
+  document.body.appendChild(snow);
+
+  setTimeout(() => snow.remove(), 10000);
+}
+
+/* tạo tuyết sau mỗi 120ms */
+setInterval(createSnow, 120);
+
+/* animation rơi xuống */
+const snowStyle = document.createElement("style");
+snowStyle.innerHTML = `
+  @keyframes snowFall {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(110vh); opacity: 0; }
+  }
+`;
+document.head.appendChild(snowStyle);
 
     /* ---------- Utility: show initial state in console for debugging ---------- */
     console.log("Script loaded. Elements:", { startBtn, themeBtn, musicBtn, copyBtn, resetBtn });
