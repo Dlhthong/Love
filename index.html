@@ -1,244 +1,128 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Love Letter - Christmas Theme</title>
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Love Letter Mode</title>
+<style>
     body {
-      margin: 0;
-      height: 100vh;
-      background: black;
-      overflow: hidden;
-      font-family: 'Times New Roman', serif;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: serif;
+        background: #ffeef2;
+        transition: background 0.6s;
     }
 
-    /* Nền hai bên đổi theo chủ đề */
-    body::before, body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      background: url("CHRISTMAS_BACKGROUND.jpg") no-repeat center/cover;
-      z-index: 0;
-    }
-    body::after { right: 0; transform: scaleX(-1); }
-    body::before { left: 0; }
-
-    .letterBox {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-    }
-    .letterBox img {
-      height: 85vh;
-      width: auto;
-      border-radius: 12px;
-      box-shadow: 0 0 40px rgba(255,150,200,0.8);
+    /* Christmas mode background */
+    body.christmas {
+        background: url('Love Letter2 .jpg') center/cover no-repeat;
     }
 
-    #displayText {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
-      text-align: center;
-      font-size: 42px;
-      font-weight: bold;
-      color: black;
-      white-space: pre-wrap;
-      opacity: 0;
-      transition: opacity 1s ease;
-      text-shadow:
-        2px 2px 6px rgba(255,255,255,0.8),
-        2px 2px 8px rgba(0,0,0,0.4);
+    #letter {
+        width: 80%;
+        max-width: 500px;
+        padding: 25px;
+        background: white;
+        border-radius: 15px;
+        margin: 60px auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        position: relative;
+        z-index: 10;
+        transition: 0.6s;
     }
 
-    #displayText.show { opacity: 1; }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
+    /* Christmas letter */
+    body.christmas #letter {
+        background: url('Love Letter2 .jpg') center/cover no-repeat;
+        color: #00380c;
+        font-weight: bold;
     }
 
-    .typing {
-      display: inline-block;
-      overflow: hidden;
-      white-space: normal;
-      animation: typing 3s steps(40) forwards;
+    .falling-item {
+        position: fixed;
+        top: -50px;
+        font-size: 28px;
+        pointer-events: none;
+        animation: fall linear infinite;
     }
 
-    /* Điều khiển bên trái */
-    .controls-left {
-      position: absolute;
-      left: 8%;
-      top: 70%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
-      padding: 10px 15px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 3;
-    }
-    .controls-left input {
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid gray;
-      text-align: center;
-      font-size: 16px;
-      width: 180px;
-    }
-    .controls-left button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: pink;
-      font-weight: bold;
+    @keyframes fall {
+        0% { transform: translateY(-50px); opacity: 1; }
+        100% { transform: translateY(110vh); opacity: 0; }
     }
 
-    /* ICON GIÁNG SINH RƠI - hộp quà & cây thông */
-    .xmas-icon {
-      position: fixed;
-      top: -20px;
-      font-size: 28px;
-      animation: fallIcon linear forwards;
-      user-select: none;
-      pointer-events: none;
-      z-index: 1;
+    #toggleMode {
+        position: fixed;
+        right: 20px;
+        top: 20px;
+        padding: 10px 20px;
+        background: #ff4d6d;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 50;
     }
 
-    @keyframes fallIcon {
-      to { transform: translateY(110vh) rotate(45deg); opacity: 0; }
+    body.christmas #toggleMode {
+        background: green;
     }
-
-    /* Sao băng giữ nguyên */
-    .star {
-      position: fixed;
-      width: 25px;
-      height: 25px;
-      background: gold;
-      clip-path: polygon(
-        50% 0%, 61% 35%, 98% 35%, 
-        68% 57%, 79% 91%, 50% 70%, 
-        21% 91%, 32% 57%, 2% 35%, 
-        39% 35%
-      );
-      box-shadow:
-        0 0 15px gold,
-        0 0 25px orange,
-        0 0 40px red;
-      z-index: 5;
-    }
-
-    @keyframes fallStar {
-      0% { transform: translate(0, -50px) rotate(0deg); opacity:1; }
-      100% { transform: translate(450px, 100vh) rotate(360deg); opacity:0; }
-    }
-  </style>
+</style>
 </head>
 <body>
-  <div class="letterBox">
-    <!-- Ảnh thiệp giáng sinh người dùng gửi -->
-    <img src="Love Letter2.jpg" alt="Christmas Letter">
-    <div id="displayText"></div>
-  </div>
 
-  <div class="controls-left" id="inputBox">
-    <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
-    <button id="startBtn">Bắt đầu</button>
-    <button id="copyBtn" style="display:none;">Sao chép link</button>
-    <button id="resetBtn" style="display:none;">Reset</button>
-  </div>
+<button id="toggleMode">Mode Giáng Sinh</button>
+<audio id="bgm" loop autoplay src="Love Letter2 .mp3"></audio>
 
-  <button id="musicBtn" style="position:absolute; top:20px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:pink; font-weight:bold; cursor:pointer;">🔊 Nhạc</button>
+<div id="letter">
+    <h2>Gửi Em</h2>
+    <p>Đây sẽ là nội dung bức thư cũ hoặc nội dung mới bạn muốn thay...</p>
+</div>
 
-  <!-- Nhạc giáng sinh người dùng gửi -->
-  <audio id="bgm" loop>
-    <source src="Love Letter2.mp3" type="audio/mpeg">
-  </audio>
+<script>
+let isChristmas = false;
+const audio = document.getElementById('bgm');
+const btn = document.getElementById('toggleMode');
 
-  <script>
-    /* ICON GIÁNG SINH RƠI XUỐNG */
-    function createXmasIcon() {
-      const icon = document.createElement("div");
-      icon.classList.add("xmas-icon");
+btn.addEventListener('click', () => {
+    isChristmas = !isChristmas;
+    document.body.classList.toggle('christmas');
 
-      const list = ["🎁", "🎄"]; // hộp quà & cây thông
-      icon.innerHTML = list[Math.floor(Math.random() * list.length)];
+    // Change music
+    audio.src = isChristmas ? "Love Letter2 .mp3" : "music.mp3";
+    audio.play();
 
-      icon.style.left = Math.random() * 100 + "vw";
-      icon.style.fontSize = (Math.random() * 20 + 20) + "px";
-      icon.style.animationDuration = (Math.random() * 5 + 5) + "s";
+    // Update falling items
+    document.querySelectorAll('.falling-item').forEach(e => e.remove());
+    spawnFallingItems();
 
-      document.body.appendChild(icon);
-      setTimeout(() => icon.remove(), 10000);
-    }
-    setInterval(createXmasIcon, 120);
+    btn.textContent = isChristmas ? "Mode Thường" : "Mode Giáng Sinh";
+});
 
-    /* Sao băng */
-    function createStar() {
-      const star = document.createElement("div");
-      star.classList.add("star");
-      star.style.left = Math.random() * 90 + "vw";
-      star.style.top = "-50px";
-      star.style.animation = `fallStar ${1.5 + Math.random()}s linear forwards`;
-      document.body.appendChild(star);
-      setTimeout(() => star.remove(), 2000);
-    }
-    setInterval(createStar, 800);
+function spawnFallingItems() {
+    setInterval(() => {
+        const item = document.createElement('div');
+        item.className = 'falling-item';
+        item.style.left = Math.random() * 100 + 'vw';
 
-    const displayText = document.getElementById("displayText");
-    const startBtn = document.getElementById("startBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const musicBtn = document.getElementById("musicBtn");
-    const inputBox = document.getElementById("inputBox");
-    const audio = document.getElementById("bgm");
+        if (isChristmas) {
+            const icons = ['🎁','🎄'];
+            item.textContent = icons[Math.floor(Math.random()*icons.length)];
+        } else {
+            const icons = ['💖','🌸'];
+            item.textContent = icons[Math.floor(Math.random()*icons.length)];
+        }
 
-    function typeAnimation(text) {
-      displayText.innerHTML = `<span class='typing'>${text}</span>`;
-      displayText.classList.add("show");
-    }
+        item.style.animationDuration = (3 + Math.random()*4) + 's';
+        document.body.appendChild(item);
 
-    startBtn.addEventListener("click", () => {
-      const text = document.getElementById("message").value.trim();
-      if (!text) return alert("Vui lòng nhập chữ!");
-      typeAnimation(text);
-      startBtn.style.display = "none";
-      copyBtn.style.display = "inline-block";
-      resetBtn.style.display = "inline-block";
-    });
+        setTimeout(()=> item.remove(), 7000);
+    }, 500);
+}
 
-    copyBtn.addEventListener("click", () => {
-      const text = encodeURIComponent(document.getElementById("message").value.trim());
-      const url = window.location.origin + window.location.pathname + `?text=${text}`;
-      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
-    });
-
-    resetBtn.addEventListener("click", () => location.reload());
-
-    musicBtn.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.play().catch(()=>{});
-        musicBtn.textContent = "🔊 Đang phát";
-      } else {
-        audio.pause();
-        musicBtn.textContent = "🔈 Đang tắt";
-      }
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("text")) {
-      const txt = decodeURIComponent(params.get("text"));
-      inputBox.style.display = "none";
-      setTimeout(() => typeAnimation(txt), 500);
-    }
-  </script>
+spawnFallingItems();
+</script>
 </body>
 </html>
