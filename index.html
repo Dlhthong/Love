@@ -293,7 +293,7 @@
   
       
     }
-    // Auto apply theme from link
+   // Auto apply theme from link
 if (params.get("mode") === "christmas") {
   isChristmas = true;
 
@@ -308,7 +308,10 @@ if (params.get("mode") === "christmas") {
   isChristmas = false;
 
   safeSetMedia(NORMAL_IMG, NORMAL_AUDIO);
-  letterImg.style.boxShadow =
+  letterImg.style.boxShadow = "0 0 40px rgba(255,150,200,0.8)";
+  themeBtn.textContent = "🎄 Chủ đề Giáng Sinh";
+}
+
 
     /* ---------- Theme toggle logic ---------- */
     // File names you provided earlier:
