@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Love Letter</title>
+  <title>Love Letter - Christmas Theme</title>
   <style>
     body {
       margin: 0;
@@ -11,13 +11,15 @@
       overflow: hidden;
       font-family: 'Times New Roman', serif;
     }
+
+    /* Nền hai bên đổi theo chủ đề */
     body::before, body::after {
       content: "";
       position: absolute;
       top: 0;
       width: 50%;
       height: 100%;
-      background: url("Love Letter.png") no-repeat center/cover;
+      background: url("CHRISTMAS_BACKGROUND.jpg") no-repeat center/cover;
       z-index: 0;
     }
     body::after { right: 0; transform: scaleX(-1); }
@@ -36,6 +38,7 @@
       border-radius: 12px;
       box-shadow: 0 0 40px rgba(255,150,200,0.8);
     }
+
     #displayText {
       position: absolute;
       top: 50%;
@@ -53,11 +56,22 @@
         2px 2px 6px rgba(255,255,255,0.8),
         2px 2px 8px rgba(0,0,0,0.4);
     }
+
     #displayText.show { opacity: 1; }
 
-    @keyframes typing { from { width: 0; } to { width: 100%; } }
-    .typing { display: inline-block; overflow: hidden; white-space: normal; animation: typing 3s steps(40) forwards; }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
 
+    .typing {
+      display: inline-block;
+      overflow: hidden;
+      white-space: normal;
+      animation: typing 3s steps(40) forwards;
+    }
+
+    /* Điều khiển bên trái */
     .controls-left {
       position: absolute;
       left: 8%;
@@ -71,20 +85,39 @@
       gap: 6px;
       z-index: 3;
     }
-    .controls-left input { padding: 6px; border-radius: 6px; border: 1px solid gray; text-align: center; font-size: 16px; width: 180px; }
-    .controls-left button { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: pink; font-weight: bold; }
+    .controls-left input {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid gray;
+      text-align: center;
+      font-size: 16px;
+      width: 180px;
+    }
+    .controls-left button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: pink;
+      font-weight: bold;
+    }
 
-    .petal {
+    /* ICON GIÁNG SINH RƠI - hộp quà & cây thông */
+    .xmas-icon {
       position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: fall linear forwards;
+      top: -20px;
+      font-size: 28px;
+      animation: fallIcon linear forwards;
       user-select: none;
       pointer-events: none;
       z-index: 1;
     }
-    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
+    @keyframes fallIcon {
+      to { transform: translateY(110vh) rotate(45deg); opacity: 0; }
+    }
+
+    /* Sao băng giữ nguyên */
     .star {
       position: fixed;
       width: 25px;
@@ -96,29 +129,23 @@
         21% 91%, 32% 57%, 2% 35%, 
         39% 35%
       );
-      box-shadow: 0 0 15px gold, 0 0 25px orange, 0 0 40px red;
+      box-shadow:
+        0 0 15px gold,
+        0 0 25px orange,
+        0 0 40px red;
       z-index: 5;
     }
-    @keyframes fallStar { 0% { transform: translate(0, -50px) rotate(0deg); opacity:1; } 100% { transform: translate(450px, 100vh) rotate(360deg); opacity:0; } }
 
-    /* Tuyết rơi cho Christmas Mode */
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      font-size: 16px;
-      color: white;
-      user-select: none;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.8;
-      animation: fallSnow linear forwards;
+    @keyframes fallStar {
+      0% { transform: translate(0, -50px) rotate(0deg); opacity:1; }
+      100% { transform: translate(450px, 100vh) rotate(360deg); opacity:0; }
     }
-    @keyframes fallSnow { to { transform: translateY(110vh) rotate(360deg); opacity:0; } }
   </style>
 </head>
 <body>
   <div class="letterBox">
-    <img id="letterImg" src="Love Letter.png" alt="Love Letter">
+    <!-- Ảnh thiệp giáng sinh người dùng gửi -->
+    <img src="Love Letter2.jpg" alt="Christmas Letter">
     <div id="displayText"></div>
   </div>
 
@@ -130,119 +157,87 @@
   </div>
 
   <button id="musicBtn" style="position:absolute; top:20px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:pink; font-weight:bold; cursor:pointer;">🔊 Nhạc</button>
-  <button id="themeBtn" style="position:absolute; top:70px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:lightgreen; font-weight:bold; cursor:pointer;">🎄 Christmas Mode</button>
 
+  <!-- Nhạc giáng sinh người dùng gửi -->
   <audio id="bgm" loop>
-    <source id="bgmSource" src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
+    <source src="Love Letter2.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    let isChristmas = false;
+    /* ICON GIÁNG SINH RƠI XUỐNG */
+    function createXmasIcon() {
+      const icon = document.createElement("div");
+      icon.classList.add("xmas-icon");
 
-    const letterImg = document.getElementById("letterImg");
+      const list = ["🎁", "🎄"]; // hộp quà & cây thông
+      icon.innerHTML = list[Math.floor(Math.random() * list.length)];
+
+      icon.style.left = Math.random() * 100 + "vw";
+      icon.style.fontSize = (Math.random() * 20 + 20) + "px";
+      icon.style.animationDuration = (Math.random() * 5 + 5) + "s";
+
+      document.body.appendChild(icon);
+      setTimeout(() => icon.remove(), 10000);
+    }
+    setInterval(createXmasIcon, 120);
+
+    /* Sao băng */
+    function createStar() {
+      const star = document.createElement("div");
+      star.classList.add("star");
+      star.style.left = Math.random() * 90 + "vw";
+      star.style.top = "-50px";
+      star.style.animation = `fallStar ${1.5 + Math.random()}s linear forwards`;
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 2000);
+    }
+    setInterval(createStar, 800);
+
     const displayText = document.getElementById("displayText");
     const startBtn = document.getElementById("startBtn");
     const copyBtn = document.getElementById("copyBtn");
     const resetBtn = document.getElementById("resetBtn");
     const musicBtn = document.getElementById("musicBtn");
-    const themeBtn = document.getElementById("themeBtn");
     const inputBox = document.getElementById("inputBox");
     const audio = document.getElementById("bgm");
-    const bgmSource = document.getElementById("bgmSource");
 
-    // Hiệu ứng hoa/lá
-    function createPetal() {
-      const petal = document.createElement("div");
-      petal.classList.add("petal");
-      if(isChristmas){
-        petal.innerHTML = Math.random() > 0.5 ? "🎁" : "🌲";
-        petal.style.fontSize = (Math.random()*20+14)+"px";
-      } else {
-        petal.innerHTML = Math.random() > 0.5 ? "❀" : "❤️";
-        petal.style.fontSize = (Math.random()*20+10)+"px";
-      }
-      petal.style.left = Math.random()*100+"vw";
-      petal.style.color = isChristmas ? "white" : (Math.random()>0.5?"pink":"red");
-      petal.style.animationDuration = (Math.random()*5+5)+"s";
-      document.body.appendChild(petal);
-      setTimeout(()=>petal.remove(), 12000);
+    function typeAnimation(text) {
+      displayText.innerHTML = `<span class='typing'>${text}</span>`;
+      displayText.classList.add("show");
     }
-    setInterval(createPetal, 100);
 
-    // Hiệu ứng sao băng
-    function createStar() {
-      const star = document.createElement("div");
-      star.classList.add("star");
-      star.style.left = Math.random()*90+"vw";
-      star.style.top = "-50px";
-      star.style.animation = `fallStar ${1.5+Math.random()}s linear forwards`;
-      document.body.appendChild(star);
-      setTimeout(()=>star.remove(), 2000);
-    }
-    setInterval(createStar, 800);
-
-    // Tuyết rơi Christmas Mode
-    function createSnow() {
-      if(!isChristmas) return;
-      const snow = document.createElement("div");
-      snow.classList.add("snowflake");
-      snow.innerHTML = "❄";
-      snow.style.left = Math.random()*100+"vw";
-      snow.style.fontSize = (Math.random()*20+10)+"px";
-      snow.style.animationDuration = (Math.random()*5+5)+"s";
-      document.body.appendChild(snow);
-      setTimeout(()=>snow.remove(), 12000);
-    }
-    setInterval(createSnow, 150);
-
-    function typeAnimation(text){ displayText.innerHTML = `<span class='typing'>${text}</span>`; displayText.classList.add("show"); }
-
-    startBtn.addEventListener("click", ()=>{
+    startBtn.addEventListener("click", () => {
       const text = document.getElementById("message").value.trim();
-      if(!text) return alert("Vui lòng nhập chữ!");
+      if (!text) return alert("Vui lòng nhập chữ!");
       typeAnimation(text);
       startBtn.style.display = "none";
       copyBtn.style.display = "inline-block";
       resetBtn.style.display = "inline-block";
     });
 
-    copyBtn.addEventListener("click", ()=>{
+    copyBtn.addEventListener("click", () => {
       const text = encodeURIComponent(document.getElementById("message").value.trim());
       const url = window.location.origin + window.location.pathname + `?text=${text}`;
-      navigator.clipboard.writeText(url).then(()=>alert("Đã sao chép link: "+url));
+      navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
     });
 
-    resetBtn.addEventListener("click", ()=>location.reload());
+    resetBtn.addEventListener("click", () => location.reload());
 
-    musicBtn.addEventListener("click", ()=>{
-      if(audio.paused){ audio.play().catch(()=>{}); musicBtn.textContent="🔊 Đang phát"; }
-      else { audio.pause(); musicBtn.textContent="🔈 Đang tắt"; }
-    });
-
-    // Nút chuyển Normal <-> Christmas
-    themeBtn.addEventListener("click", ()=>{
-      isChristmas = !isChristmas;
-      if(isChristmas){
-        letterImg.src = "Christmas Letter.png";
-        bgmSource.src = "Christmas Music.mp3";
-        audio.load(); audio.play().catch(()=>{});
-        themeBtn.textContent = "❄ Normal Mode";
+    musicBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play().catch(()=>{});
+        musicBtn.textContent = "🔊 Đang phát";
       } else {
-        letterImg.src = "Love Letter.png";
-        bgmSource.src = "NGUOI_DAU_TIEN.mp3";
-        audio.load(); audio.play().catch(()=>{});
-        themeBtn.textContent = "🎄 Christmas Mode";
+        audio.pause();
+        musicBtn.textContent = "🔈 Đang tắt";
       }
     });
 
-    // Nếu link có text sẵn
     const params = new URLSearchParams(window.location.search);
-    if(params.has("text")){
+    if (params.has("text")) {
       const txt = decodeURIComponent(params.get("text"));
       inputBox.style.display = "none";
-      setTimeout(()=>typeAnimation(txt), 500);
-      musicBtn.style.display="inline-block";
-      themeBtn.style.display="inline-block";
+      setTimeout(() => typeAnimation(txt), 500);
     }
   </script>
 </body>
