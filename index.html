@@ -1,218 +1,219 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Love Letter</title>
-<style>
-body {
-    margin: 0;
-    height: 100vh;
-    background: black;
-    overflow: hidden;
-    font-family: 'Times New Roman', serif;
-    transition: 0.6s;
-}
+  <meta charset="UTF-8">
+  <title>Love Letter</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+      font-family: 'Times New Roman', serif;
+    }
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
+      z-index: 0;
+    }
+    body::after { right: 0; transform: scaleX(-1); }
+    body::before { left: 0; }
 
-/* === NORMAL MODE BACKGROUND === */
-body.normal::before,
-body.normal::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    background: url("42f40e7939ab815bd5f83f20b533b9d4.jpg") no-repeat center/cover;
-    z-index: 0;
-}
-body.normal::after { right: 0; transform: scaleX(-1);} 
-body.normal::before { left: 0; }
+    .letterBox {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+    .letterBox img {
+      height: 85vh;
+      width: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255,150,200,0.8);
+    }
+    #displayText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      text-align: center;
+      font-size: 42px;
+      font-weight: bold;
+      color: black;
+      white-space: pre-wrap;
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-shadow: 2px 2px 6px rgba(255,255,255,0.8), 2px 2px 8px rgba(0,0,0,0.4);
+    }
+    #displayText.show { opacity: 1; }
 
-/* === CHRISTMAS MODE BACKGROUND === */
-body.christmas {
-    /* KHÔNG ĐỔI NỀN — GIỮ NGUYÊN BACKGROUND 2 BÊN */
-}
+    .typing {
+      display: inline-block;
+      overflow: hidden;
+      white-space: normal;
+      animation: typing 3s steps(40) forwards;
+    }
 
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
 
-.letterBox {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-}
+    .controls-left {
+      position: absolute;
+      left: 8%;
+      top: 70%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.8);
+      padding: 10px 15px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 3;
+    }
+    .controls-left input {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid gray;
+      text-align: center;
+      font-size: 16px;
+      width: 180px;
+    }
+    .controls-left button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: pink;
+      font-weight: bold;
+    }
 
-/* letter image normal */
-body.normal .letterBox img {
-    height: 85vh;
-    width: auto;
-    border-radius: 12px;
-    box-shadow: 0 0 40px rgba(255,150,200,0.8);
-}
+    .petal {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      animation: fall linear forwards;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
 
-/* letter image christmas */
-body.christmas .letterBox img {
-    height: 85vh;
-    width: auto;
-    border-radius: 12px;
-    box-shadow: 0 0 40px rgba(0,255,120,0.9);
-}
-
-#displayText {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    text-align: center;
-    font-size: 42px;
-    font-weight: bold;
-    color: black;
-    white-space: pre-wrap;
-    opacity: 0;
-    transition: opacity 1s ease;
-    text-shadow: 2px 2px 6px rgba(255,255,255,0.8), 2px 2px 8px rgba(0,0,0,0.4);
-}
-#displayText.show { opacity: 1; }
-
-.typing { display: inline-block; overflow: hidden; white-space: normal; animation: typing 3s steps(40) forwards; }
-@keyframes typing { from { width:0;} to {width:100%;} }
-
-.controls-left {
-    position: absolute;
-    left: 8%; top: 70%;
-    transform: translateY(-50%);
-    background: rgba(255,255,255,0.8);
-    padding: 10px 15px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    z-index: 3;
-}
-.controls-left input { padding: 6px; border-radius: 6px; border: 1px solid gray; text-align: center; font-size: 16px; width: 180px; }
-.controls-left button { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: pink; font-weight: bold; }
-
-/* falling items */
-.falling { position: fixed; top: -10px; font-size: 24px; animation: fall linear forwards; pointer-events:none; user-select:none; z-index: 1; }
-@keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0;} }
-
-/* toggle button */
-#modeBtn {
-    position:absolute; top:20px; right:20px; z-index:4;
-    padding:8px 14px; border:none; border-radius:8px;
-    background:lightgreen; font-weight:bold; cursor:pointer;
-}
-</style>
+    .star {
+      position: fixed;
+      width: 25px;
+      height: 25px;
+      background: gold;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      box-shadow: 0 0 15px gold, 0 0 25px orange, 0 0 40px red;
+      z-index: 5;
+    }
+  </style>
 </head>
-<body class="normal">
-
-<button id="modeBtn">🎄 Chế Độ Giáng Sinh</button>
-
-<div class="letterBox">
+<body>
+  <div class="letterBox">
     <img id="letterImg" src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
-</div>
+  </div>
 
-<div class="controls-left" id="inputBox">
+  <div class="controls-left" id="inputBox">
     <input type="text" id="message" placeholder="Nhập chữ bạn muốn...">
     <button id="startBtn">Bắt đầu</button>
+    <button id="themeBtn">🎄 Chủ đề Giáng Sinh</button>
     <button id="copyBtn" style="display:none;">Sao chép link</button>
     <button id="resetBtn" style="display:none;">Reset</button>
-</div>
+  </div>
 
-<button id="musicBtn" style="position:absolute; top:20px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:pink; font-weight:bold; cursor:pointer;">🔊 Nhạc</button>
+  <button id="musicBtn" style="position:absolute; top:20px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:pink; font-weight:bold; cursor:pointer;">🔊 Nhạc</button>
 
-<audio id="bgm" loop>
-    <source id="musicSrc" src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
-</audio>
+  <audio id="bgm" loop>
+    <source id="audioSrc" src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
+  </audio>
 
 <script>
-let christmas = false;
-const modeBtn = document.getElementById("modeBtn");
-const letterImg = document.getElementById("letterImg");
-const musicSrc = document.getElementById("musicSrc");
-const audio = document.getElementById("bgm");
+let isChristmas = false;
 
-modeBtn.onclick = () => {
-    christmas = !christmas;
-
-    if (christmas) {
-        document.body.className = "christmas";
-        letterImg.src = "Love Letter2 .jpg";
-        musicSrc.src = "Love Letter2 .mp3";
-        modeBtn.textContent = "💖 Chế Độ Thường";
-    } else {
-        document.body.className = "normal";
-        letterImg.src = "Love Letter.png";
-        musicSrc.src = "NGUOI_DAU_TIEN.mp3";
-        modeBtn.textContent = "🎄 Chế Độ Giáng Sinh";
-    }
-
-    audio.load();
-    audio.play().catch(()=>{});
-};
-
-/* Falling items depending on mode */
-function createFalling() {
-    const el = document.createElement("div");
-    el.classList.add("falling");
-    el.style.left = Math.random()*100 + "vw";
-    el.style.fontSize = (Math.random()*20+10)+"px";
-    el.style.animationDuration = (Math.random()*5+5)+"s";
-
-    if (christmas) {
-        let arr = ["🎄","🎁"];
-        el.textContent = arr[Math.floor(Math.random()*arr.length)];
-    } else {
-        let arr = ["❀","❤️"];
-        el.textContent = arr[Math.floor(Math.random()*arr.length)];
-    }
-
-    document.body.appendChild(el);
-    setTimeout(()=> el.remove(), 10000);
+function createPetal() {
+  const petal = document.createElement("div");
+  petal.classList.add("petal");
+  petal.innerHTML = isChristmas ? (Math.random() > 0.5 ? "🎄" : "🎁") : (Math.random() > 0.5 ? "❀" : "❤️");
+  petal.style.left = Math.random() * 100 + "vw";
+  petal.style.fontSize = (Math.random() * 20 + 10) + "px";
+  petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+  document.body.appendChild(petal);
+  setTimeout(() => petal.remove(), 10000);
 }
-setInterval(createFalling, 80);
+setInterval(createPetal, 80);
 
-/* original typing script unchanged */
+function createStar() {
+  const star = document.createElement("div");
+  star.classList.add("star");
+  star.style.left = Math.random() * 90 + "vw";
+  star.style.top = "-50px";
+  star.style.animation = `fallStar ${1.5 + Math.random()}s linear forwards`;
+  document.body.appendChild(star);
+  setTimeout(() => star.remove(), 2000);
+}
+setInterval(createStar, 800);
+
 const displayText = document.getElementById("displayText");
 const startBtn = document.getElementById("startBtn");
 const copyBtn = document.getElementById("copyBtn");
 const resetBtn = document.getElementById("resetBtn");
+const themeBtn = document.getElementById("themeBtn");
 const musicBtn = document.getElementById("musicBtn");
 const inputBox = document.getElementById("inputBox");
+const audio = document.getElementById("bgm");
+const audioSrc = document.getElementById("audioSrc");
+const letterImg = document.getElementById("letterImg");
 
-function typeAnimation(text){
-    displayText.innerHTML = `<span class='typing'>${text}</span>`;
-    displayText.classList.add("show");
+function typeAnimation(text) {
+  displayText.innerHTML = `<span class='typing'>${text}</span>`;
+  displayText.classList.add("show");
 }
 
 startBtn.addEventListener("click", () => {
-    const text = document.getElementById("message").value.trim();
-    if (!text) return alert("Vui lòng nhập chữ!");
-    typeAnimation(text);
-    startBtn.style.display = "none";
-    copyBtn.style.display = "inline-block";
-    resetBtn.style.display = "inline-block";
+  const text = document.getElementById("message").value.trim();
+  if (!text) return alert("Vui lòng nhập chữ!");
+  typeAnimation(text);
+  startBtn.style.display = "none";
+  copyBtn.style.display = "inline-block";
+  resetBtn.style.display = "inline-block";
 });
 
 copyBtn.addEventListener("click", () => {
-    const text = encodeURIComponent(document.getElementById("message").value.trim());
-    const url = window.location.origin + window.location.pathname + `?text=${text}`;
-    navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
+  const text = encodeURIComponent(document.getElementById("message").value.trim());
+  const url = window.location.origin + window.location.pathname + `?text=${text}`;
+  navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
 });
 
 resetBtn.addEventListener("click", () => location.reload());
 
 musicBtn.addEventListener("click", () => {
-    if (audio.paused) { audio.play().catch(()=>{}); musicBtn.textContent = "🔊 Đang phát"; }
-    else { audio.pause(); musicBtn.textContent = "🔈 Đang tắt"; }
+  if (audio.paused) {
+    audio.play().catch(()=>{});
+    musicBtn.textContent = "🔊 Đang phát";
+  } else {
+    audio.pause();
+    musicBtn.textContent = "🔈 Đang tắt";
+  }
 });
 
-const params = new URLSearchParams(window.location.search);
-if (params.has("text")) {
-    const txt = decodeURIComponent(params.get("text"));
-    inputBox.style.display = "none";
-    setTimeout(()=> typeAnimation(txt), 500);
-    musicBtn.style.display = "inline-block";
-}
-</script>
-</body>
-</html>
+//------------------------------
+//  NÚT CHUYỂN CHỦ ĐỀ GIÁNG SINH
+//------------------------------
+themeBtn.addEventListener("click", () => {
+  isChristmas = !isChristmas;
+
+  if (isChristmas) {
+    themeBtn.textContent = "✨ Chủ đề thường";
+    letterImg.src = "Love
