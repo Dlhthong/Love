@@ -192,6 +192,17 @@
 
     /* ---------- Main code ---------- */
     let isChristmas = false;
+    function getShareLink() {
+  const base = location.origin + location.pathname;
+  const t = encodeURIComponent(messageInput.value.trim());
+
+  if (isChristmas) {
+    return `${base}?text=${t}&mode=christmas`;
+  } else {
+    return `${base}?text=${t}&mode=normal`;
+  }
+}
+
 
     function createPetal() {
       const petal = document.createElement("div");
@@ -247,14 +258,12 @@
     });
 
     copyBtn.addEventListener("click", () => {
-      const text = encodeURIComponent(messageInput.value.trim());
-      const url = window.location.origin + window.location.pathname + `?text=${text}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url)).catch(err => alert("Không thể sao chép: " + err));
-      } else {
-        prompt("Sao chép link thủ công:", url);
-      }
-    });
+  const url = getShareLink();
+  navigator.clipboard.writeText(url).then(()=>{
+    alert("Đã sao chép link: " + url);
+  }).catch(err => alert("Không thể sao chép: " + err));
+});
+
 
     resetBtn.addEventListener("click", () => location.reload());
 
@@ -281,7 +290,16 @@
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
       musicBtn.style.display = "inline-block";
+      
     }
+    // Auto apply theme from link
+if (params.get("mode") === "christmas") {
+  isChristmas = true;
+  themeBtn.click();
+} else if (params.get("mode") === "normal") {
+  isChristmas = false;
+}
+
 
     /* ---------- Theme toggle logic ---------- */
     // File names you provided earlier:
