@@ -197,6 +197,10 @@
       const petal = document.createElement("div");
       petal.classList.add("petal");
       petal.innerHTML = isChristmas ? (Math.random() > 0.5 ? "🎄" : "🎁") : (Math.random() > 0.5 ? "❀" : "❤️");
+      if (!isChristmas) {
+  petal.style.color = "#ff4d6d"; // hồng
+  // hoặc: petal.style.color = "#ff0000"; // đỏ
+}
       petal.style.left = Math.random() * 100 + "vw";
       petal.style.fontSize = (Math.random() * 20 + 10) + "px";
       petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
@@ -286,7 +290,7 @@
 
     // The files you said you'd upload:
     const CHRISTMAS_IMG = "Love Letter2 .jpg"; // note spaces kept - encode when assigning
-    const CHRISTMAS_AUDIO = "Love Letter2 .mp3"; // note spaces kept
+    const CHRISTMAS_AUDIO = "Untitled video - Made with Clipchamp.m4a"; // note spaces kept
 
     function safeSetMedia(imgPath, audioPath) {
       try {
