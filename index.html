@@ -290,8 +290,26 @@
       inputBox.style.display = "none";
       setTimeout(() => typeAnimation(txt), 500);
       musicBtn.style.display = "inline-block";
+  
       
     }
+    // Auto apply theme from link
+if (params.get("mode") === "christmas") {
+  isChristmas = true;
+
+  // đổi media ngay lập tức
+  safeSetMedia(CHRISTMAS_IMG, CHRISTMAS_AUDIO);
+
+  // hiệu ứng giống khi bấm nút Giáng Sinh
+  letterImg.style.boxShadow = "0 0 50px rgba(0,200,255,0.6)";
+  themeBtn.textContent = "✨ Chủ đề thường";
+
+} else if (params.get("mode") === "normal") {
+  isChristmas = false;
+
+  safeSetMedia(NORMAL_IMG, NORMAL_AUDIO);
+  letterImg.style.boxShadow =
+
     // Auto apply theme from link
 if (params.get("mode") === "christmas") {
   isChristmas = true;
