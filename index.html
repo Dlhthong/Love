@@ -220,16 +220,19 @@ themeBtn.addEventListener("click", () => {
     applyMedia(XMAS_IMG, XMAS_AUDIO);
     letterImg.style.boxShadow = "0 0 50px rgba(0,200,255,0.6)";
 
-    // Force skip 2s after audio loads
-    audio.addEventListener("loadeddata", function skip2() {
+    // Skip 2s sau khi audio load
+    const skip2 = () => {
       audio.currentTime = 2;
       audio.removeEventListener("loadeddata", skip2);
-    }); = "0 0 50px rgba(0,200,255,0.6)";
+    };
+    audio.addEventListener("loadeddata", skip2);
 
-    audio.addEventListener("play", function skip() {
+    // Backup skip nếu audio play trước
+    const skipOnPlay = () => {
       audio.currentTime = 2;
-      audio.removeEventListener("play", skip);
-    });
+      audio.removeEventListener("play", skipOnPlay);
+    };
+    audio.addEventListener("play", skipOnPlay);
 
   } else {
     themeBtn.textContent = "🎄 Chủ đề Giáng Sinh";
