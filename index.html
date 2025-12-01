@@ -130,7 +130,7 @@ let isChristmas = false;
 function createPetal() {
   const p = document.createElement("div");
   p.classList.add("petal");
-  p.innerHTML = isChristmas ? (Math.random() > 0.5 ? "🎄" : "🎁") : "❀";
+  p.innerHTML = isChristmas ? (Math.random() > 0.5 ? "🎄" : "🎁") : (Math.random() > 0.5 ? "🌸" : "💗");
   p.style.left = Math.random()*100 + "vw";
   p.style.color = isChristmas ? "white" : (Math.random() > 0.5 ? "#ff4d6d" : "#ff8fab");
   p.style.animationDuration = (Math.random()*5+5) + "s";
