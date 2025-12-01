@@ -161,6 +161,14 @@ function createPetal() {
 }
 setInterval(createPetal, 80);
 
+// make petals red/pink in normal mode
+const stylePetalColor = () => {
+  document.querySelectorAll('.petal').forEach(p => {
+    if (!isChristmas) p.style.color = Math.random() > 0.5 ? 'red' : 'hotpink';
+  });
+};
+setInterval(stylePetalColor, 200);
+
 function createStar() {
   const star = document.createElement("div");
   star.classList.add("star");
@@ -199,7 +207,9 @@ themeBtn.addEventListener("click", () => {
     audio.load();
     audio.addEventListener("loadedmetadata", () => {
       audio.currentTime = 2; // bỏ 2 giây đầu
-      audio.play().catch(()=>{});
+      audio.play().then(()=>{
+      if (isChristmas) audio.currentTime = 2;
+().catch(()=>{});
     }, { once: true });
   } else {
     themeBtn.textContent = "🎄 Chủ đề Giáng Sinh";
