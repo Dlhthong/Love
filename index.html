@@ -348,37 +348,28 @@ if (params.get("mode") === "christmas") {
     });
 /* === Snow Effect (chỉ bật khi isChristmas = true) === */
 function createSnow() {
-  if (!isChristmas) return; // mode thường không rơi tuyết
+  if (!isChristmas) return;
 
   const snow = document.createElement("div");
   snow.classList.add("snow");
   snow.textContent = "❄";
-  snow.style.color = "white";
 
   snow.style.position = "fixed";
   snow.style.left = Math.random() * 100 + "vw";
   snow.style.top = "-20px";
   snow.style.fontSize = (Math.random() * 12 + 12) + "px";
   snow.style.opacity = Math.random();
+  snow.style.color = "white";
+
+  snow.style.zIndex = 9999;              // ⭐ TUYẾT LUÔN Ở TRÊN TẤT CẢ
+  snow.style.pointerEvents = "none";      // ⭐ KHÔNG CHẶN CLICK NÚT
+
   snow.style.animation = `snowFall ${5 + Math.random() * 5}s linear forwards`;
 
   document.body.appendChild(snow);
-
   setTimeout(() => snow.remove(), 10000);
 }
 
-/* tạo tuyết sau mỗi 120ms */
-setInterval(createSnow, 120);
-
-/* animation rơi xuống */
-const snowStyle = document.createElement("style");
-snowStyle.innerHTML = `
-  @keyframes snowFall {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(110vh); opacity: 0; }
-  }
-`;
-document.head.appendChild(snowStyle);
 
     /* ---------- Utility: show initial state in console for debugging ---------- */
     console.log("Script loaded. Elements:", { startBtn, themeBtn, musicBtn, copyBtn, resetBtn });
