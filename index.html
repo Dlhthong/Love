@@ -132,6 +132,11 @@
       0% { transform: translate(0, -50px) rotate(0deg); opacity:1; }
       100% { transform: translate(450px, 100vh) rotate(360deg); opacity:0; }
     }
+    @keyframes snowFall {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
 
     /* Small overlay to show JS errors (visible when errors occur) */
     #errorOverlay {
@@ -247,6 +252,9 @@
       displayText.innerHTML = `<span class='typing'>${text}</span>`;
       displayText.classList.add("show");
     }
+    // cho tuyết rơi liên tục
+const snowInterval = setInterval(createSnow, 120);
+
 
     startBtn.addEventListener("click", () => {
       const text = messageInput.value.trim();
