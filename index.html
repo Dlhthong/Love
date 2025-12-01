@@ -117,6 +117,11 @@
       box-shadow: 0 0 15px gold, 0 0 25px orange, 0 0 40px red;
       z-index: 5;
     }
+
+    @keyframes fallStar {
+      0% { transform: translate(0, -50px) rotate(0deg); opacity:1; }
+      100% { transform: translate(450px, 100vh) rotate(360deg); opacity:0; }
+    }
   </style>
 </head>
 <body>
@@ -193,27 +198,4 @@ startBtn.addEventListener("click", () => {
 copyBtn.addEventListener("click", () => {
   const text = encodeURIComponent(document.getElementById("message").value.trim());
   const url = window.location.origin + window.location.pathname + `?text=${text}`;
-  navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url));
-});
-
-resetBtn.addEventListener("click", () => location.reload());
-
-musicBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play().catch(()=>{});
-    musicBtn.textContent = "🔊 Đang phát";
-  } else {
-    audio.pause();
-    musicBtn.textContent = "🔈 Đang tắt";
-  }
-});
-
-//------------------------------
-//  NÚT CHUYỂN CHỦ ĐỀ GIÁNG SINH
-//------------------------------
-themeBtn.addEventListener("click", () => {
-  isChristmas = !isChristmas;
-
-  if (isChristmas) {
-    themeBtn.textContent = "✨ Chủ đề thường";
-    letterImg.src = "Love
+  navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " +
