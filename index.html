@@ -220,6 +220,12 @@ themeBtn.addEventListener("click", () => {
     applyMedia(XMAS_IMG, XMAS_AUDIO);
     letterImg.style.boxShadow = "0 0 50px rgba(0,200,255,0.6)";
 
+    // Force skip 2s after audio loads
+    audio.addEventListener("loadeddata", function skip2() {
+      audio.currentTime = 2;
+      audio.removeEventListener("loadeddata", skip2);
+    }); = "0 0 50px rgba(0,200,255,0.6)";
+
     audio.addEventListener("play", function skip() {
       audio.currentTime = 2;
       audio.removeEventListener("play", skip);
