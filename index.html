@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Love Letter</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     body {
       margin: 0;
@@ -50,21 +49,20 @@
       white-space: pre-wrap;
       opacity: 0;
       transition: opacity 1s ease;
-      text-shadow:
-        2px 2px 6px rgba(255,255,255,0.8),
-        2px 2px 8px rgba(0,0,0,0.4);
+      text-shadow: 2px 2px 6px rgba(255,255,255,0.8), 2px 2px 8px rgba(0,0,0,0.4);
     }
     #displayText.show { opacity: 1; }
 
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
     .typing {
       display: inline-block;
       overflow: hidden;
       white-space: normal;
       animation: typing 3s steps(40) forwards;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
     }
 
     .controls-left {
@@ -115,16 +113,8 @@
       width: 25px;
       height: 25px;
       background: gold;
-      clip-path: polygon(
-        50% 0%, 61% 35%, 98% 35%,
-        68% 57%, 79% 91%, 50% 70%,
-        21% 91%, 32% 57%, 2% 35%,
-        39% 35%
-      );
-      box-shadow:
-        0 0 15px gold,
-        0 0 25px orange,
-        0 0 40px red;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      box-shadow: 0 0 15px gold, 0 0 25px orange, 0 0 40px red;
       z-index: 5;
     }
 
@@ -132,29 +122,9 @@
       0% { transform: translate(0, -50px) rotate(0deg); opacity:1; }
       100% { transform: translate(450px, 100vh) rotate(360deg); opacity:0; }
     }
-
-    /* Small overlay to show JS errors (visible when errors occur) */
-    #errorOverlay {
-      position: fixed;
-      left: 10px;
-      right: 10px;
-      top: 10px;
-      padding: 10px;
-      background: rgba(255,0,0,0.85);
-      color: white;
-      font-family: monospace;
-      z-index: 9999;
-      display: none;
-      white-space: pre-wrap;
-      border-radius: 6px;
-      max-height: 40vh;
-      overflow: auto;
-    }
   </style>
 </head>
 <body>
-  <div id="errorOverlay" role="alert"></div>
-
   <div class="letterBox">
     <img id="letterImg" src="Love Letter.png" alt="Love Letter">
     <div id="displayText"></div>
@@ -171,152 +141,90 @@
   <button id="musicBtn" style="position:absolute; top:20px; left:20px; z-index:4; padding:8px 14px; border:none; border-radius:8px; background:pink; font-weight:bold; cursor:pointer;">🔊 Nhạc</button>
 
   <audio id="bgm" loop>
-    <!-- default track; will be swapped when theme changes -->
     <source id="audioSrc" src="NGUOI_DAU_TIEN.mp3" type="audio/mpeg">
   </audio>
 
-  <script>
-    /* ---------- Debugging overlay ---------- */
-    const errorOverlay = document.getElementById('errorOverlay');
-    function showErrorOverlay(msg) {
-      errorOverlay.textContent = msg;
-      errorOverlay.style.display = 'block';
-      console.error(msg);
-    }
-    window.addEventListener('error', (e) => {
-      showErrorOverlay(`Error: ${e.message}\\nAt: ${e.filename}:${e.lineno}:${e.colno}`);
-    });
-    window.addEventListener('unhandledrejection', (e) => {
-      showErrorOverlay('Unhandled Promise Rejection: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
-    });
+<script>
+let isChristmas = false;
 
-    /* ---------- Main code ---------- */
-    let isChristmas = false;
+function createPetal() {
+  const petal = document.createElement("div");
+  petal.classList.add("petal");
+  petal.innerHTML = isChristmas ? (Math.random() > 0.5 ? "🎄" : "🎁") : (Math.random() > 0.5 ? "❀" : "❤️");
+  // đổi màu hoa đỏ/hồng hoặc trắng ở Noel
+  petal.style.color = isChristmas ? "white" : (Math.random() > 0.5 ? "red" : "pink");
+  petal.style.left = Math.random() * 100 + "vw";
+  petal.style.fontSize = (Math.random() * 20 + 10) + "px";
+  petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+  document.body.appendChild(petal);
+  setTimeout(() => petal.remove(), 10000);
+}
+setInterval(createPetal, 80);
 
-    function createPetal() {
-      const petal = document.createElement("div");
-      petal.classList.add("petal");
-      petal.innerHTML = isChristmas ? (Math.random() > 0.5 ? "🎄" : "🎁") : (Math.random() > 0.5 ? "❀" : "❤️");
-      petal.style.left = Math.random() * 100 + "vw";
-      petal.style.fontSize = (Math.random() * 20 + 10) + "px";
-      petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
-      document.body.appendChild(petal);
-      setTimeout(() => petal.remove(), 10000);
-    }
-    const petalInterval = setInterval(createPetal, 80);
+function createStar() {
+  const star = document.createElement("div");
+  star.classList.add("star");
+  star.style.left = Math.random() * 90 + "vw";
+  star.style.top = "-50px";
+  star.style.animation = `fallStar ${1.5 + Math.random()}s linear forwards`;
+  document.body.appendChild(star);
+  setTimeout(() => star.remove(), 2000);
+}
+setInterval(createStar, 800);
 
-    function createStar() {
-      const star = document.createElement("div");
-      star.classList.add("star");
-      star.style.left = Math.random() * 90 + "vw";
-      star.style.top = "-50px";
-      star.style.animation = `fallStar ${1.5 + Math.random()}s linear forwards`;
-      document.body.appendChild(star);
-      setTimeout(() => star.remove(), 2000);
-    }
-    const starInterval = setInterval(createStar, 800);
+const displayText = document.getElementById("displayText");
+const startBtn = document.getElementById("startBtn");
+const copyBtn = document.getElementById("copyBtn");
+const resetBtn = document.getElementById("resetBtn");
+const themeBtn = document.getElementById("themeBtn");
+const musicBtn = document.getElementById("musicBtn");
+const inputBox = document.getElementById("inputBox");
+const audio = document.getElementById("bgm");
+const audioSrc = document.getElementById("audioSrc");
+const letterImg = document.getElementById("letterImg");
 
-    const displayText = document.getElementById("displayText");
-    const startBtn = document.getElementById("startBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const themeBtn = document.getElementById("themeBtn");
-    const musicBtn = document.getElementById("musicBtn");
-    const inputBox = document.getElementById("inputBox");
-    const audio = document.getElementById("bgm");
-    const audioSrc = document.getElementById("audioSrc");
-    const letterImg = document.getElementById("letterImg");
-    const messageInput = document.getElementById("message");
+// thêm xử lý nút đổi chủ đề Giáng Sinh
+let originalImg = "Love Letter.png";
+let christmasImg = "Love Letter Xmas.png"; // đổi tên file theo bạn
+let originalMusic = "NGUOI_DAU_TIEN.mp3";
+let christmasMusic = "christmas.mp3"; // đổi tên file theo bạn
 
-    function typeAnimation(text) {
-      displayText.innerHTML = `<span class='typing'>${text}</span>`;
-      displayText.classList.add("show");
-    }
+themeBtn.addEventListener("click", () => {
+  isChristmas = !isChristmas;
 
-    startBtn.addEventListener("click", () => {
-      const text = messageInput.value.trim();
-      if (!text) return alert("Vui lòng nhập chữ!");
-      typeAnimation(text);
-      startBtn.style.display = "none";
-      copyBtn.style.display = "inline-block";
-      resetBtn.style.display = "inline-block";
-    });
+  if (isChristmas) {
+    themeBtn.textContent = "💖 Chủ đề Thường";
+    letterImg.src = christmasImg;
+    audioSrc.src = christmasMusic;
+    audio.load();
+    audio.addEventListener("loadedmetadata", () => {
+      audio.currentTime = 2; // bỏ 2 giây đầu
+      audio.play().catch(()=>{});
+    }, { once: true });
+  } else {
+    themeBtn.textContent = "🎄 Chủ đề Giáng Sinh";
+    letterImg.src = originalImg;
+    audioSrc.src = originalMusic;
+    audio.load();
+    audio.play().catch(()=>{});
+  }
+});
 
-    copyBtn.addEventListener("click", () => {
-      const text = encodeURIComponent(messageInput.value.trim());
-      const url = window.location.origin + window.location.pathname + `?text=${text}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " + url)).catch(err => alert("Không thể sao chép: " + err));
-      } else {
-        prompt("Sao chép link thủ công:", url);
-      }
-    });
+function typeAnimation(text) {
+  displayText.innerHTML = `<span class='typing'>${text}</span>`;
+  displayText.classList.add("show");
+}
 
-    resetBtn.addEventListener("click", () => location.reload());
+startBtn.addEventListener("click", () => {
+  const text = document.getElementById("message").value.trim();
+  if (!text) return alert("Vui lòng nhập chữ!");
+  typeAnimation(text);
+  startBtn.style.display = "none";
+  copyBtn.style.display = "inline-block";
+  resetBtn.style.display = "inline-block";
+});
 
-    musicBtn.addEventListener("click", () => {
-      // play/pause toggle (play may be blocked until user interacts)
-      if (audio.paused) {
-        audio.play().then(() => {
-          musicBtn.textContent = "🔊 Đang phát";
-        }).catch(e => {
-          // if autoplay blocked, at least change label and show error
-          showErrorOverlay("Audio không thể phát tự động: " + (e && e.message ? e.message : e));
-          musicBtn.textContent = "🔊 Đang phát (chưa được phép)";
-        });
-      } else {
-        audio.pause();
-        musicBtn.textContent = "🔈 Đang tắt";
-      }
-    });
-
-    // Read query param ?text=...
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("text")) {
-      const txt = decodeURIComponent(params.get("text"));
-      inputBox.style.display = "none";
-      setTimeout(() => typeAnimation(txt), 500);
-      musicBtn.style.display = "inline-block";
-    }
-
-    /* ---------- Theme toggle logic ---------- */
-    // File names you provided earlier:
-    const NORMAL_IMG = "Love Letter.png";
-    const NORMAL_AUDIO = "NGUOI_DAU_TIEN.mp3";
-
-    // The files you said you'd upload:
-    const CHRISTMAS_IMG = "Love Letter2 .jpg"; // note spaces kept - encode when assigning
-    const CHRISTMAS_AUDIO = "Love Letter2 .mp3"; // note spaces kept
-
-    function safeSetMedia(imgPath, audioPath) {
-      try {
-        // encodeURI to safely handle spaces and special chars
-        letterImg.src = encodeURI(imgPath);
-        audioSrc.src = encodeURI(audioPath);
-        // reload audio element so browser sees the source change
-        audio.load();
-      } catch (e) {
-        showErrorOverlay("Lỗi khi gán media: " + e);
-      }
-    }
-
-    themeBtn.addEventListener("click", () => {
-      isChristmas = !isChristmas;
-
-      if (isChristmas) {
-        themeBtn.textContent = "✨ Chủ đề thường";
-        safeSetMedia(CHRISTMAS_IMG, CHRISTMAS_AUDIO);
-        // change background glow or other visuals if you want:
-        letterImg.style.boxShadow = "0 0 50px rgba(0,200,255,0.6)";
-      } else {
-        themeBtn.textContent = "🎄 Chủ đề Giáng Sinh";
-        safeSetMedia(NORMAL_IMG, NORMAL_AUDIO);
-        letterImg.style.boxShadow = "0 0 40px rgba(255,150,200,0.8)";
-      }
-    });
-
-    /* ---------- Utility: show initial state in console for debugging ---------- */
-    console.log("Script loaded. Elements:", { startBtn, themeBtn, musicBtn, copyBtn, resetBtn });
-  </script>
-</body>
-</html>
+copyBtn.addEventListener("click", () => {
+  const text = encodeURIComponent(document.getElementById("message").value.trim());
+  const url = window.location.origin + window.location.pathname + `?text=${text}`;
+  navigator.clipboard.writeText(url).then(()=> alert("Đã sao chép link: " +
